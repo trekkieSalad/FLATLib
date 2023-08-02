@@ -1,6 +1,7 @@
 #vscode
 .vscode
-main.c
+test/out
+build
 
 # Prerequisites
 *.d
