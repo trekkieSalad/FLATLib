@@ -4,6 +4,7 @@
 #define DEFAULT_LOAD_FACTOR 0.75
 #define DEFAULT_SIZE 11
 
+// Operaciones privadas
 static Node *createNode(void *data) {
     Node *newNode = malloc(sizeof(Node));
     newNode->data = data;
@@ -29,6 +30,19 @@ static void rehash(Set *set) {
     set->size = newSize;
 }
 
+static void destroyBucket(Node *bucket, void (*destroyFunction)(void *)) {
+    if (bucket == NULL) {
+        return;
+    }
+    destroyBucket(bucket->next, destroyFunction);
+    if (destroyFunction != NULL) {
+        destroyFunction(bucket->data);
+    }
+    free(bucket);
+}
+
+// Operaciones públicas
+// Operaciones de inicialización y destrucción
 Set *setCreate(Type type) {
     Set *newSet = malloc(sizeof(Set));
     newSet->buckets = calloc(DEFAULT_SIZE, sizeof(Node *));
@@ -50,18 +64,6 @@ size_t setNElements(const Set *set) {
         }
     }
     return size;
-}
-
-
-static void destroyBucket(Node *bucket, void (*destroyFunction)(void *)) {
-    if (bucket == NULL) {
-        return;
-    }
-    destroyBucket(bucket->next, destroyFunction);
-    if (destroyFunction != NULL) {
-        destroyFunction(bucket->data);
-    }
-    free(bucket);
 }
 
 void setDestroy(Set *set, void (*destroyFunction)(void *)) {
@@ -114,30 +116,6 @@ bool setRemove(Set *set, const void *data) {
     return false;
 }
 
-bool setContains(const Set *set, const void *data) {
-    unsigned int index = set->hashFunction(data, set->size);
-    for (Node *current = set->buckets[index]; current != NULL; current = current->next) {
-        if (set->equalsFunction(current->data, data)) {
-            return true;
-        }
-    }
-    return false;
-}
-
-
-bool setsEquals(const Set *setA, const Set *setB){
-    if (setA->type != setB->type) return false;
-    if (setA->size != setB->size) return false;
-    for (size_t i = 0; i < setA->size; i++) {
-        Node *current = setA->buckets[i];
-        while (current != NULL) {
-            if (!setContains(setB, current->data)) return false;
-            current = current->next;
-        }
-    }
-    return true;
-}
-
 char *setToString(const Set *set) {
     if (set == NULL) return NULL;
 
@@ -175,6 +153,46 @@ char *setToString(const Set *set) {
 
     return string;
 }
+
+// Operaciones de evaluación
+bool setContains(const Set *set, const void *data) {
+    unsigned int index = set->hashFunction(data, set->size);
+    for (Node *current = set->buckets[index]; current != NULL; current = current->next) {
+        if (set->equalsFunction(current->data, data)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool setsEquals(const Set *setA, const Set *setB){
+    if (setA->type != setB->type) return false;
+    if (setNElements(setA) != setNElements(setB)) return false;
+    for (size_t i = 0; i < setA->size; i++) {
+        Node *current = setA->buckets[i];
+        while (current != NULL) {
+            if (!setContains(setB, current->data)) return false;
+            current = current->next;
+        }
+    }
+    return true;
+}
+
+bool setIsSubsetOf(const Set *subset, const Set *set){
+    if (subset->type != set->type) return false;
+    if (setNElements(subset) > setNElements(set)) return false;
+
+    Node *current = NULL;
+    for (size_t i = 0; i < subset->size; i++) {
+        current = subset->buckets[i];
+        while (current != NULL) {
+            if (!setContains(set, current->data)) return false;
+            current = current->next;
+        }
+    }
+    return true;
+}
+
 
 Set *setsUnion(const Set *setA, const Set *setB) {
     if (setA == NULL || setB == NULL) return NULL;

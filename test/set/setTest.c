@@ -3,23 +3,13 @@
 
 void setBasicSuite();
 void setOpSuite();
+void setEvalSuite();
 
 void add_all_tests() {
     setBasicSuite();
+    setEvalSuite();
     setOpSuite();
 }
-
-/*int main() {
-    CU_initialize_registry();
-    add_all_tests();
-    CU_pSuite basicSuite = CU_get_suite("Basic Set Test Suite");
-    CU_pSuite opSuite = CU_get_suite("Operation Set Test Suite");
-    CU_run_suite(basicSuite);
-    CU_run_suite(opSuite);
-    CU_cleanup_registry();
-    return CU_get_error();
-}*/
-
 
 int main() {
     

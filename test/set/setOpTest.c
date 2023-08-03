@@ -62,5 +62,5 @@ void setOpSuite() {
     CU_pSuite pSuite = NULL;
 
     pSuite = CU_add_suite("setOperationTest", NULL, NULL);
-    CU_add_test(pSuite, "Set Operations Test", testSetsOperations);
+    CU_add_test(pSuite, "Set operations", testSetsOperations);
 }

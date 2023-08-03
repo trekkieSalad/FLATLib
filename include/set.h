@@ -17,18 +17,21 @@ typedef struct {
     toStringFunction toStringFunction;
 } Set;
 
-
+// Operaciones de inicialización, destrucción y consulta
 Set *setCreate(Type);
 size_t setNElements(const Set *);
 void setDestroy(Set *, void (*)(void *));
 bool setAdd(Set *, void *);
 bool setRemove(Set *, const void *);
-bool setContains(const Set *, const void *);
-bool setsEquals(const Set *, const Set *);
 char * setToString(const Set *);
-
 Set *setOfString(char *);
 
+// Operaciones de evaluación
+bool setContains(const Set *, const void *);
+bool setsEquals(const Set *, const Set *);
+bool setIsSubsetOf(const Set *, const Set *);
+
+// Operaciones de conjuntos
 Set *setsUnion(const Set *, const Set *);
 Set *setsIntersection(const Set *, const Set *);
 Set *setsDifference(const Set *, const Set *);
