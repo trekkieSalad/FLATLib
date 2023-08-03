@@ -20,10 +20,10 @@ typedef enum {
     ULONG_LONG,
     FLOAT,
     DOUBLE,
-    UDOUBLE,
     LONG_DOUBLE,
     STRING,
     USER_DEFINED,
+    _TYPE_COUNT,
 }Type;
 
 
