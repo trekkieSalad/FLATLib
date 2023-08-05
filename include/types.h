@@ -22,6 +22,7 @@ typedef enum {
     DOUBLE,
     LONG_DOUBLE,
     STRING,
+    SET,
     USER_DEFINED,
     _TYPE_COUNT,
 }Type;
@@ -30,9 +31,14 @@ typedef enum {
 typedef unsigned int (*hashFunction)(const void *data, size_t size);
 typedef bool (*equalsFunction)(const void *a, const void *b);
 typedef char * (*toStringFunction)(const void *data);
+typedef void * (*cloneFunction)(const void *data);
+typedef void (*freeFunction)(void *data);
 
 hashFunction getHashFunction(Type);
 equalsFunction getEqualsFunction(Type);
 toStringFunction getToStringFunction(Type);
+cloneFunction getCloneFunction(Type);
+freeFunction getFreeFunction(Type);
+size_t getTypeSize(Type);
 
 #endif // TYPES_H

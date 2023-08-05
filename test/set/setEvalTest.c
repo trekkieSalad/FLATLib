@@ -16,7 +16,7 @@ void testSetEquals() {
     setAdd(setA, &i4);
 
     setAdd(setB, &i3);
-    setAdd(setB, &i1);
+    setAdd(setB, &(int){1});
     setAdd(setB, &i4);
     setAdd(setB, &i2);
 
@@ -30,15 +30,25 @@ void testSetEquals() {
     setAdd(setD, &i2);
     setAdd(setD, &i3);
 
+    i1 = 9;
+
+    
+    char *strA = setToString(setA);
+    char *strB = setToString(setB);
+    printf("Set: %s\n", strA);
+    printf("Set: %s\n", strB);
+    free(strA);
+    free(strB);
+
     CU_ASSERT_TRUE(setsEquals(setA, setB));
     CU_ASSERT_FALSE(setsEquals(setA, setC));
     CU_ASSERT_FALSE(setsEquals(setA, setD));
     CU_ASSERT_FALSE(setsEquals(setC, setD));
 
-    setDestroy(setA, NULL);
-    setDestroy(setB, NULL);
-    setDestroy(setC, NULL);
-    setDestroy(setD, NULL);
+    setDestroy(setA);
+    setDestroy(setB);
+    setDestroy(setC);
+    setDestroy(setD);
 }
 
 void testSetSubset() {
@@ -102,11 +112,11 @@ void testSetSubset() {
     CU_ASSERT_TRUE(setIsSubsetOf(setD, setD));
     CU_ASSERT_TRUE(setIsSubsetOf(setE, setE));
 
-    setDestroy(setA, NULL);
-    setDestroy(setB, NULL);
-    setDestroy(setC, NULL);
-    setDestroy(setD, NULL);
-    setDestroy(setE, NULL);
+    setDestroy(setA);
+    setDestroy(setB);
+    setDestroy(setC);
+    setDestroy(setD);
+    setDestroy(setE);
 }
 
 void setEvalSuite() {

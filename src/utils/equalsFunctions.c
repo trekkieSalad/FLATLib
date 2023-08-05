@@ -1,4 +1,5 @@
 #include "types.h"
+#include <set.h>
 #include <stdbool.h>
 
 #define DEFINE_EQUALS_FUNCTION(TYPE, SUFFIX) \
@@ -23,6 +24,7 @@ DEFINE_EQUALS_FUNCTION(double, double)
 DEFINE_EQUALS_FUNCTION(long double, longdouble)
 
 bool stringEqualsFunction(const void *data1, const void *data2);
+bool setEqualsFunction(const void *data1, const void *data2);
 
 bool (*equalsFunctions[_TYPE_COUNT])(const void *data1, const void *data2) = {
     NULL,
@@ -40,6 +42,7 @@ bool (*equalsFunctions[_TYPE_COUNT])(const void *data1, const void *data2) = {
     doubleEqualsFunction,
     longdoubleEqualsFunction,
     stringEqualsFunction,
+    setEqualsFunction,
     NULL,
 };
 
@@ -47,6 +50,12 @@ bool stringEqualsFunction(const void *data1, const void *data2) {
     char *value1 = *(char **)data1;
     char *value2 = *(char **)data2;
     return strcmp(value1, value2) == 0;
+}
+
+bool setEqualsFunction(const void *data1, const void *data2) {
+    const Set *value1 = data1;
+    const Set *value2 = data2;
+    return setsEquals(value1, value2);
 }
 
 equalsFunction getEqualsFunction(Type type) {

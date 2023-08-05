@@ -1,5 +1,6 @@
-#include "set.h"
-#include "prime.h"
+#include <set.h>
+#include <prime.h>
+#include <time.h>
 
 #define DEFAULT_LOAD_FACTOR 0.75
 #define DEFAULT_SIZE 11
@@ -11,6 +12,30 @@ static Node *createNode(void *data) {
     newNode->next = NULL;
     return newNode;
 }
+
+/*static Node *createNode(void *data, size_t dataSize) {
+    Node *newNode = malloc(sizeof(Node));
+    if (newNode == NULL) {
+        // Manejo del error en caso de fallo en la asignación de memoria
+        return NULL;
+    }
+
+    // Asignar memoria para copiar los datos
+    newNode->data = malloc(dataSize);
+    if (newNode->data == NULL) {
+        // Manejo del error en caso de fallo en la asignación de memoria
+        free(newNode);
+        return NULL;
+    }
+
+    // Copiar los datos en la nueva ubicación de memoria
+    memcpy(newNode->data, data, dataSize);
+
+    newNode->next = NULL;
+    return newNode;
+}*/
+
+
 
 static void rehash(Set *set) {
     size_t newSize = nextPrimeSize(set->size);
@@ -30,27 +55,32 @@ static void rehash(Set *set) {
     set->size = newSize;
 }
 
-static void destroyBucket(Node *bucket, void (*destroyFunction)(void *)) {
+static void destroyBucket(Set *set, Node *bucket) {
     if (bucket == NULL) {
         return;
     }
-    destroyBucket(bucket->next, destroyFunction);
-    if (destroyFunction != NULL) {
-        destroyFunction(bucket->data);
-    }
+    destroyBucket(set, bucket->next);
+    set->freeFunction(bucket->data);
     free(bucket);
 }
 
 // Operaciones públicas
 // Operaciones de inicialización y destrucción
 Set *setCreate(Type type) {
+    srand(time(NULL));
+    long hash = rand() * rand();
+
     Set *newSet = malloc(sizeof(Set));
     newSet->buckets = calloc(DEFAULT_SIZE, sizeof(Node *));
     newSet->size = DEFAULT_SIZE;
     newSet->type = type;
+    newSet->hashcode = hash;
+    newSet->nElements = 0;
     newSet->hashFunction = getHashFunction(type);
     newSet->equalsFunction = getEqualsFunction(type);
     newSet->toStringFunction = getToStringFunction(type);
+    newSet->cloneFunction = getCloneFunction(type);
+    newSet->freeFunction = getFreeFunction(type);
     return newSet;
 }
 
@@ -64,11 +94,12 @@ size_t setNElements(const Set *set) {
         }
     }
     return size;
+    //return set->nElements;
 }
 
-void setDestroy(Set *set, void (*destroyFunction)(void *)) {
+void setDestroy(Set *set) {
     for (size_t i = 0; i < set->size; i++) {
-        destroyBucket(set->buckets[i], destroyFunction);
+        destroyBucket(set, set->buckets[i]);
     }
     free(set->buckets);
     free(set);
@@ -87,9 +118,10 @@ bool setAdd(Set *set, void *data) {
         }
         bucket = bucket->next;
     }
-    Node *newNode = createNode(data);
+    Node *newNode = createNode(set->cloneFunction(data));
     newNode->next = set->buckets[index];
     set->buckets[index] = newNode;
+    set->nElements++;
     return true;
 }
 
@@ -107,7 +139,9 @@ bool setRemove(Set *set, const void *data) {
             } else {
                 prev->next = curr->next;
             }
+            set->freeFunction(curr->data);
             free(curr);
+            set->nElements--;
             return true;
         }
         prev = curr;

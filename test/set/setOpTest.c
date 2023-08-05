@@ -45,16 +45,16 @@ void testSetsOperations() {
     CU_ASSERT_TRUE(setsEquals(setDifference, setDifferenceFinal));
     CU_ASSERT_TRUE(setsEquals(setSymmetricDifference, setSymmetricDifferenceFinal));
 
-    setDestroy(setA, NULL);
-    setDestroy(setB, NULL);
-    setDestroy(setUnion, NULL);
-    setDestroy(setIntersection, NULL);
-    setDestroy(setDifference, NULL);
-    setDestroy(setSymmetricDifference, NULL);
-    setDestroy(setUnionFinal, NULL);
-    setDestroy(setIntersectionFinal, NULL);
-    setDestroy(setDifferenceFinal, NULL);
-    setDestroy(setSymmetricDifferenceFinal, NULL);
+    setDestroy(setA);
+    setDestroy(setB);
+    setDestroy(setUnion);
+    setDestroy(setIntersection);
+    setDestroy(setDifference);
+    setDestroy(setSymmetricDifference);
+    setDestroy(setUnionFinal);
+    setDestroy(setIntersectionFinal);
+    setDestroy(setDifferenceFinal);
+    setDestroy(setSymmetricDifferenceFinal);
 
 }
 

@@ -1,4 +1,5 @@
 #include "types.h"
+#include <set.h>
 
 #define DEFINE_HASH_FUNCTION(TYPE, SUFFIX, MULTIPLIER) \
     unsigned int SUFFIX##HashFunction(const void *data, size_t size) { \
@@ -21,6 +22,7 @@ DEFINE_HASH_FUNCTION(double, double, 1000)
 DEFINE_HASH_FUNCTION(long double, longdouble, 1000)
 
 unsigned int stringHashFunction(const void *data, size_t size);
+unsigned int setHashFunction(const void *data, size_t size);
 
 unsigned int (*hashFunctions[_TYPE_COUNT])(const void *data, size_t size) = {
     NULL,
@@ -38,6 +40,7 @@ unsigned int (*hashFunctions[_TYPE_COUNT])(const void *data, size_t size) = {
     doubleHashFunction,
     longdoubleHashFunction,
     stringHashFunction,
+    setHashFunction,
     NULL,
 };
 
@@ -48,6 +51,11 @@ unsigned int stringHashFunction(const void *data, size_t size){
         hash += value[i];
     }
     return hash % size;
+}
+
+unsigned int setHashFunction(const void *data, size_t size){
+    Set *value = *(Set **)data;
+    return value->hashcode % size;
 }
 
 hashFunction getHashFunction(Type type){

@@ -1,29 +1,5 @@
 #include "types.h"
-
-/*char *intToString(const void *data) {
-    int value = *(int *)data;
-    char *string = malloc(12 * sizeof(char));
-    sprintf(string, "%d", value);
-    return string;
-}
-
-char *floatToString(const void *data) {
-    float value = *(float *)data;
-    char *string = malloc(12 * sizeof(char));
-    sprintf(string, "%.2f", value);
-    return string;
-}
-
-toStringFunction getToStringFunction(Type type) {
-    switch (type) {
-        case INT:
-            return intToString;
-        case FLOAT:
-            return floatToString;
-        default:
-            return NULL;
-    }
-}*/
+#include <set.h>
 
 #define DEFINE_TO_STRING_FUNCTION(TYPE, SUFFIX, FORMAT) \
     char * SUFFIX##ToStringFunction(const void *data) { \
@@ -47,7 +23,9 @@ DEFINE_TO_STRING_FUNCTION(float, float, "%.2f")
 DEFINE_TO_STRING_FUNCTION(double, double, "%.4f")
 DEFINE_TO_STRING_FUNCTION(long double, longdouble, "%.4Lf")
 
+
 char * stringToStringFunction(const void *data);
+char * setToStringFunction(const void *data);
 
 char * (*ToStringFunctions[_TYPE_COUNT])(const void *data) = {
     NULL,
@@ -65,6 +43,7 @@ char * (*ToStringFunctions[_TYPE_COUNT])(const void *data) = {
     doubleToStringFunction,
     longdoubleToStringFunction,
     stringToStringFunction,
+    setToStringFunction,
     NULL,
 };
 
@@ -73,6 +52,11 @@ char * stringToStringFunction(const void *data){
     char *string = malloc((strlen(value) + 1) * sizeof(char));
     strcpy(string, value);
     return string;
+}
+
+char * setToStringFunction(const void *data){
+    const Set *set = data;
+    return setToString(set);
 }
 
 toStringFunction getToStringFunction(Type type){

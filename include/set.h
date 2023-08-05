@@ -12,15 +12,19 @@ typedef struct {
     Node **buckets;
     size_t size;
     Type type;
+    long hashcode;
+    long nElements;
     hashFunction hashFunction;
     equalsFunction equalsFunction;
     toStringFunction toStringFunction;
+    cloneFunction cloneFunction;
+    freeFunction freeFunction;
 } Set;
 
 // Operaciones de inicialización, destrucción y consulta
 Set *setCreate(Type);
 size_t setNElements(const Set *);
-void setDestroy(Set *, void (*)(void *));
+void setDestroy(Set *);
 bool setAdd(Set *, void *);
 bool setRemove(Set *, const void *);
 char * setToString(const Set *);
