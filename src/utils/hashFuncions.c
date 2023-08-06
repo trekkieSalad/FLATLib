@@ -45,7 +45,7 @@ unsigned int (*hashFunctions[_TYPE_COUNT])(const void *data, size_t size) = {
 };
 
 unsigned int stringHashFunction(const void *data, size_t size){
-    char *value = *(char **)data;
+    char *value = (char *) data;
     unsigned int hash = 0;
     for (size_t i = 0; i < strlen(value); i++){
         hash += value[i];

@@ -47,8 +47,9 @@ bool (*equalsFunctions[_TYPE_COUNT])(const void *data1, const void *data2) = {
 };
 
 bool stringEqualsFunction(const void *data1, const void *data2) {
-    char *value1 = *(char **)data1;
-    char *value2 = *(char **)data2;
+    char *value1 = (char *)data1;
+    char *value2 = (char *)data2;
+
     return strcmp(value1, value2) == 0;
 }
 

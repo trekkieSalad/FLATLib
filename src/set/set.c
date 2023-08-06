@@ -13,30 +13,6 @@ static Node *createNode(void *data) {
     return newNode;
 }
 
-/*static Node *createNode(void *data, size_t dataSize) {
-    Node *newNode = malloc(sizeof(Node));
-    if (newNode == NULL) {
-        // Manejo del error en caso de fallo en la asignación de memoria
-        return NULL;
-    }
-
-    // Asignar memoria para copiar los datos
-    newNode->data = malloc(dataSize);
-    if (newNode->data == NULL) {
-        // Manejo del error en caso de fallo en la asignación de memoria
-        free(newNode);
-        return NULL;
-    }
-
-    // Copiar los datos en la nueva ubicación de memoria
-    memcpy(newNode->data, data, dataSize);
-
-    newNode->next = NULL;
-    return newNode;
-}*/
-
-
-
 static void rehash(Set *set) {
     size_t newSize = nextPrimeSize(set->size);
     Node **newBuckets = calloc(newSize, sizeof(Node *));

@@ -3,25 +3,20 @@
 #include <CUnit/Basic.h>
 
 void testSetCreate() {
-    Set *set = setCreate(INT);
-    CU_ASSERT_NOT_EQUAL(set, NULL);
-    CU_ASSERT_NOT_EQUAL(set->buckets, NULL);
-    CU_ASSERT_EQUAL(set->size, 11);
-    CU_ASSERT_EQUAL(set->type, INT);
-    CU_ASSERT_EQUAL(set->hashFunction, getHashFunction(INT));
-    CU_ASSERT_EQUAL(set->equalsFunction, getEqualsFunction(INT));
-    CU_ASSERT_EQUAL(set->toStringFunction, getToStringFunction(INT));
-    setDestroy(set);
 
-    set = setCreate(FLOAT);
-    CU_ASSERT_NOT_EQUAL(set, NULL);
-    CU_ASSERT_NOT_EQUAL(set->buckets, NULL);
-    CU_ASSERT_EQUAL(set->size, 11);
-    CU_ASSERT_EQUAL(set->type, FLOAT);
-    CU_ASSERT_EQUAL(set->hashFunction, getHashFunction(FLOAT));
-    CU_ASSERT_EQUAL(set->equalsFunction, getEqualsFunction(FLOAT));
-    CU_ASSERT_EQUAL(set->toStringFunction, getToStringFunction(FLOAT));
-    setDestroy(set);
+    for (int i = 0; i < _TYPE_COUNT ; i++){        
+        Set *set = setCreate(i);
+        CU_ASSERT_NOT_EQUAL(set, NULL);
+        CU_ASSERT_NOT_EQUAL(set->buckets, NULL);
+        CU_ASSERT_EQUAL(set->size, 11);
+        CU_ASSERT_EQUAL(set->type, i);
+        CU_ASSERT_EQUAL(set->hashFunction, getHashFunction(i));
+        CU_ASSERT_EQUAL(set->equalsFunction, getEqualsFunction(i));
+        CU_ASSERT_EQUAL(set->toStringFunction, getToStringFunction(i));
+        CU_ASSERT_EQUAL(set->cloneFunction, getCloneFunction(i));
+        CU_ASSERT_EQUAL(set->freeFunction, getFreeFunction(i));
+        setDestroy(set);
+    }
 }
 
 void testSetAdd() {
@@ -40,8 +35,6 @@ void testSetAdd() {
     CU_ASSERT_TRUE(setContains(set, &(int){4}));
     CU_ASSERT_FALSE(setContains(set, &(int){5}));
     CU_ASSERT_FALSE(setContains(set, &(int){6}));
-    CU_ASSERT_FALSE(setContains(set, &(float){1}));
-    CU_ASSERT_FALSE(setContains(set, &(char){2}));
 
     setDestroy(set);
 
@@ -57,8 +50,25 @@ void testSetAdd() {
     CU_ASSERT_TRUE(setContains(set, &(float){4.0}));
     CU_ASSERT_FALSE(setContains(set, &(float){5.0}));
     CU_ASSERT_FALSE(setContains(set, &(float){6.0}));
-    CU_ASSERT_FALSE(setContains(set, &(int){1}));
-    CU_ASSERT_FALSE(setContains(set, &(char){2.0}));
+
+    setDestroy(set);
+
+    set = setCreate(STRING);
+    setAdd(set, &(char *){"1"});
+    setAdd(set, &(char *){"2"});
+    setAdd(set, &(char *){"3"});
+    setAdd(set, &(char *){"4"});
+    setAdd(set, &(char *){"11"});
+    setAdd(set, &(char *){"12"});
+    setAdd(set, &(char *){"a"});
+    CU_ASSERT_TRUE(setContains(set, &(char *){"1"}));
+    CU_ASSERT_TRUE(setContains(set, &(char *){"2"}));
+    CU_ASSERT_TRUE(setContains(set, &(char *){"3"}));
+    CU_ASSERT_TRUE(setContains(set, &(char *){"4"}));
+    CU_ASSERT_TRUE(setContains(set, &(char *){"a"}));
+    CU_ASSERT_FALSE(setContains(set, &(char *){"5"}));
+    CU_ASSERT_FALSE(setContains(set, &(char *){"6"}));
+    CU_ASSERT_FALSE(setContains(set, &(char *){"hola"}));
 
     setDestroy(set);
 }
@@ -105,6 +115,27 @@ void testSetRemove() {
     CU_ASSERT_TRUE(setContains(set, &(float){4.0}));
 
     setDestroy(set);
+
+    set = setCreate(STRING);
+    setAdd(set, &(char *){"1"});
+    setAdd(set, &(char *){"2"});
+    setAdd(set, &(char *){"hola"});
+    setAdd(set, &(char *){"adios"});
+
+    CU_ASSERT_TRUE(setContains(set, &(char *){"1"}));
+    CU_ASSERT_TRUE(setContains(set, &(char *){"2"}));
+    CU_ASSERT_TRUE(setContains(set, &(char *){"hola"}));
+    CU_ASSERT_TRUE(setContains(set, &(char *){"adios"}));
+
+    setRemove(set, &(char *){"1"});
+    setRemove(set, &(char *){"hola"});
+
+    CU_ASSERT_FALSE(setContains(set, &(char *){"1"}));
+    CU_ASSERT_TRUE(setContains(set, &(char *){"2"}));
+    CU_ASSERT_FALSE(setContains(set, &(char *){"hola"}));
+    CU_ASSERT_TRUE(setContains(set, &(char *){"adios"}));
+
+    setDestroy(set);
 }
 
 void testSetRepetition(){
@@ -144,6 +175,8 @@ void testSetComposed(){
     Set *inset3 = setCreate(INT);
     Set *inset4 = setCreate(INT);
     Set *inset5 = setCreate(STRING);
+    Set *inset6 = setCreate(STRING);
+    Set *inset7 = setCreate(STRING);
 
     setAdd(inset1, &(int){1});
     setAdd(inset1, &(int){3});
@@ -163,17 +196,18 @@ void testSetComposed(){
 
     setAdd(inset5, &(char *){"Hello"});
 
+    setAdd(inset6, &(char *){"Bye"});
+    setAdd(inset6, &(char *){"Hello"});
+    setAdd(inset6, &(char *){"Good morning"});
+
+    setAdd(inset7, &(char *){"Dinner"});
+    setAdd(inset7, &(char *){"Lunch"});
+    setAdd(inset7, &(char *){"Breakfast"});
+    setAdd(inset7, &(char *){"Dessert"});
+
     setAdd(set, inset1);
     setAdd(set, inset2);
     setAdd(set, inset3);
-
-    char *str = setToString(set);
-    printf("%s\n", str);
-    free(str);
-
-    str = setToString(inset1);
-    printf("%s\n", str);
-    free(str);
 
     CU_ASSERT_EQUAL(setNElements(set), 3);
     CU_ASSERT_TRUE(setContains(set, inset1));
@@ -183,11 +217,27 @@ void testSetComposed(){
     CU_ASSERT_FALSE(setContains(set, inset5));
 
     setDestroy(set);
+
+    set = setCreate(SET);
+    setAdd(set, inset5);
+    setAdd(set, inset6);
+    setAdd(set, inset7);
+
+    CU_ASSERT_EQUAL(setNElements(set), 3);
+    CU_ASSERT_TRUE(setContains(set, inset5));
+    CU_ASSERT_TRUE(setContains(set, inset6));
+    CU_ASSERT_TRUE(setContains(set, inset7));
+    CU_ASSERT_FALSE(setContains(set, inset1));
+
+    setDestroy(set);
     setDestroy(inset1);
     setDestroy(inset2);
     setDestroy(inset3);
     setDestroy(inset4);
     setDestroy(inset5);
+    setDestroy(inset6);
+    setDestroy(inset7);
+
 }
 
 void setBasicSuite() {

@@ -60,8 +60,8 @@ bool isProbablePrime(long long n, int k) {
 
 
 long long nextPrimeSize(long long actual) {
-    long long prime = actual + 2;
-    while (!isProbablePrime(prime, 500))
+    long long prime = actual * 2;
+    while (!isProbablePrime(prime, 100))
         prime++;
     return prime;
 }
