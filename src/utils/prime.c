@@ -1,4 +1,4 @@
-#include "prime.h"
+#include <prime.h>
 
 // Función para calcular (a^b) % m
 long long modulo(long long a, long long b, long long m) {
