@@ -213,7 +213,7 @@ void testSetComposed(){
     CU_ASSERT_TRUE(setContains(set, inset1));
     CU_ASSERT_TRUE(setContains(set, inset2));
     CU_ASSERT_TRUE(setContains(set, inset3));
-    CU_ASSERT_FALSE(setContains(set, inset4));
+    CU_ASSERT_TRUE(setContains(set, inset4));
     CU_ASSERT_FALSE(setContains(set, inset5));
 
     setDestroy(set);

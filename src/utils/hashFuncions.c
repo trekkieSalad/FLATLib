@@ -4,7 +4,7 @@
 #define DEFINE_HASH_FUNCTION(TYPE, SUFFIX, MULTIPLIER) \
     unsigned int SUFFIX##HashFunction(const void *data, size_t size) { \
         TYPE value = *(TYPE *)data; \
-        return (int) (value * MULTIPLIER) % size; \
+        return (unsigned int) (value * MULTIPLIER) % size; \
     }
 
 DEFINE_HASH_FUNCTION(char, char, 1)
@@ -54,8 +54,16 @@ unsigned int stringHashFunction(const void *data, size_t size){
 }
 
 unsigned int setHashFunction(const void *data, size_t size){
-    Set *value = *(Set **)data;
-    return value->hashcode % size;
+    const Set *value = data;
+    long hash = 0;
+    for (size_t i = 0; i < value->size; i++){
+        Node *node = value->buckets[i];
+        while (node != NULL){
+            hash += value->hashFunction(node->data, size);
+            node = node->next;
+        }
+    }
+    return hash % size;
 }
 
 hashFunction getHashFunction(Type type){

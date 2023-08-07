@@ -69,8 +69,6 @@ void * setCloneFunction(const void *data){
     const Set *set = data;
     Set *copy = setCreate(set->type);
 
-    copy->hashcode = set->hashcode;
-
     for (size_t i = 0; i < set->size; i++) {
         Node *current = set->buckets[i];
         while (current != NULL) {
