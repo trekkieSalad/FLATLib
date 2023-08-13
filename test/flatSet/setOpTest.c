@@ -3,13 +3,13 @@
 #include <CUnit/Basic.h>
 
 void testSetsUnion(){
-    Set *setA = setCreate(INT);
-    Set *setB = setCreate(INT);
-    Set *setC = setCreate(INT);
-    Set *setUnionAB, *setUnionFinalAB = setCreate(INT);
-    Set *setUnionAC, *setUnionFinalAC = setCreate(INT);
-    Set *setUnionBC, *setUnionFinalBC = setCreate(INT);
-    Set *setUnionABC, *setUnionFinalABC = setCreate(INT);
+    Set setA = setCreate(INT);
+    Set setB = setCreate(INT);
+    Set setC = setCreate(INT);
+    Set setUnionAB, setUnionFinalAB = setCreate(INT);
+    Set setUnionAC, setUnionFinalAC = setCreate(INT);
+    Set setUnionBC, setUnionFinalBC = setCreate(INT);
+    Set setUnionABC, setUnionFinalABC = setCreate(INT);
 
     int i1 = 1, i2 = 2, i3 = 3, i4 = 4;
 
@@ -64,13 +64,13 @@ void testSetsUnion(){
 }
 
 void testSetIntersection(){
-    Set *setA = setCreate(INT);
-    Set *setB = setCreate(INT);
-    Set *setC = setCreate(INT);
-    Set *setIntersectionAB, *setIntersectionFinalAB = setCreate(INT);
-    Set *setIntersectionAC, *setIntersectionFinalAC = setCreate(INT);
-    Set *setIntersectionBC, *setIntersectionFinalBC = setCreate(INT);
-    Set *setIntersectionABC, *setIntersectionFinalABC = setCreate(INT);
+    Set setA = setCreate(INT);
+    Set setB = setCreate(INT);
+    Set setC = setCreate(INT);
+    Set setIntersectionAB, setIntersectionFinalAB = setCreate(INT);
+    Set setIntersectionAC, setIntersectionFinalAC = setCreate(INT);
+    Set setIntersectionBC, setIntersectionFinalBC = setCreate(INT);
+    Set setIntersectionABC, setIntersectionFinalABC = setCreate(INT);
 
     int i1 = 1, i2 = 2, i3 = 3, i4 = 4;
 
@@ -116,15 +116,15 @@ void testSetIntersection(){
 }
 
 void testSetsDifference(){
-    Set *setA = setCreate(INT);
-    Set *setB = setCreate(INT);
-    Set *setC = setCreate(INT);
-    Set *setDifferenceAB, *setDifferenceFinalAB = setCreate(INT);
-    Set *setDifferenceBA, *setDifferenceFinalBA = setCreate(INT);
-    Set *setDifferenceAC, *setDifferenceFinalAC = setCreate(INT);
-    Set *setDifferenceCA, *setDifferenceFinalCA = setCreate(INT);
-    Set *setDifferenceBC, *setDifferenceFinalBC = setCreate(INT);
-    Set *setDifferenceCB, *setDifferenceFinalCB = setCreate(INT);
+    Set setA = setCreate(INT);
+    Set setB = setCreate(INT);
+    Set setC = setCreate(INT);
+    Set setDifferenceAB, setDifferenceFinalAB = setCreate(INT);
+    Set setDifferenceBA, setDifferenceFinalBA = setCreate(INT);
+    Set setDifferenceAC, setDifferenceFinalAC = setCreate(INT);
+    Set setDifferenceCA, setDifferenceFinalCA = setCreate(INT);
+    Set setDifferenceBC, setDifferenceFinalBC = setCreate(INT);
+    Set setDifferenceCB, setDifferenceFinalCB = setCreate(INT);
 
     int i1 = 1, i2 = 2, i3 = 3, i4 = 4;
 
@@ -186,12 +186,12 @@ void testSetsDifference(){
 }
 
 void testSetsSymmetricDifference(){
-    Set *setA = setCreate(INT);
-    Set *setB = setCreate(INT);
-    Set *setC = setCreate(INT);
-    Set *setSymmetricDifferenceAB, *setSymmetricDifferenceFinalAB = setCreate(INT);
-    Set *setSymmetricDifferenceAC, *setSymmetricDifferenceFinalAC = setCreate(INT);
-    Set *setSymmetricDifferenceBC, *setSymmetricDifferenceFinalBC = setCreate(INT);
+    Set setA = setCreate(INT);
+    Set setB = setCreate(INT);
+    Set setC = setCreate(INT);
+    Set setSymmetricDifferenceAB, setSymmetricDifferenceFinalAB = setCreate(INT);
+    Set setSymmetricDifferenceAC, setSymmetricDifferenceFinalAC = setCreate(INT);
+    Set setSymmetricDifferenceBC, setSymmetricDifferenceFinalBC = setCreate(INT);
 
     int i1 = 1, i2 = 2, i3 = 3, i4 = 4;
 
@@ -237,9 +237,9 @@ void testSetsSymmetricDifference(){
 }
 
 void testSetPower(){
-    Set *auxIntSet = setCreate(INT), *auxCharSet = setCreate(CHAR);
-    Set *powerIntSet, *finalPowerIntSet = setCreate(SET);
-    Set *powerCharSet, *finalPowerCharSet = setCreate(SET);
+    Set auxIntSet = setCreate(INT), auxCharSet = setCreate(CHAR);
+    Set powerIntSet, finalPowerIntSet = setCreate(SET);
+    Set powerCharSet, finalPowerCharSet = setCreate(SET);
     int i1 = 1, i2 = 2, i3 = 3;
     char c1 = 'a', c2 = 'b', c3 = 'c';
 

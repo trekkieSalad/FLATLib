@@ -1,4 +1,6 @@
 #include <set.h>
+#include <types.h>
+#include <dataStructFunc.h>
 #include <prime.h>
 
 #define DEFAULT_LOAD_FACTOR 0.75
@@ -6,7 +8,7 @@
 
 /// @brief Creates a new node with the given data.
 /// @param data Data to be stored in the node.
-static Node *createNode(void *data) {
+static Node *createNode(generic_flat_pointer data) {
     Node *newNode = malloc(sizeof(Node));
     newNode->data = data;
     newNode->next = NULL;
@@ -15,7 +17,7 @@ static Node *createNode(void *data) {
 
 /// @brief Rehashes the set, doubling its size and reassigning the elements.
 /// @param set Set to be rehashed.
-static void rehash(Set *set) {
+static void rehash(Set set) {
     // get next prime size as new size and allocate new buckets
     size_t newSize = nextPrimeSize(set->size);
     Node **newBuckets = calloc(newSize, sizeof(Node *));
@@ -42,7 +44,7 @@ static void rehash(Set *set) {
 /// @brief Destroys a bucket, freeing all the memory allocated for it.
 /// @param set Set to which the bucket belongs.
 /// @param bucket Bucket to be destroyed.
-static void destroyBucket(Set *set, Node *bucket) {
+static void destroyBucket(Set set, Node *bucket) {
     if (bucket == NULL) {
         return;
     }
@@ -54,10 +56,10 @@ static void destroyBucket(Set *set, Node *bucket) {
 }
 
 // Initialization, modification and destruction operations
-Set *setCreate(Type type) {
+Set setCreate(Type type) {
 
     // allocate memory for the set and initialize it
-    Set *newSet = malloc(sizeof(Set));
+    Set newSet = malloc(sizeof(struct set));
     newSet->buckets = calloc(DEFAULT_SIZE, sizeof(Node *));
     newSet->size = DEFAULT_SIZE;
     newSet->type = type;
@@ -69,7 +71,7 @@ Set *setCreate(Type type) {
     return newSet;
 }
 
-void setDestroy(Set *set) {
+void setDestroy(Set set) {
     if (set == NULL) return;
 
     // destroy each bucket
@@ -82,7 +84,7 @@ void setDestroy(Set *set) {
     free(set);
 }
 
-bool setAdd(Set *set, void *data) {
+bool setAdd(Set set, generic_flat_pointer data) {
     // if the load factor is greater than the default, rehash the set
     if ((double)setNElements(set) / set->size >= DEFAULT_LOAD_FACTOR)
         rehash(set);
@@ -106,7 +108,7 @@ bool setAdd(Set *set, void *data) {
     return true;
 }
 
-bool setRemove(Set *set, void *data) {
+bool setRemove(Set set, generic_flat_pointer data) {
     if (set == NULL || data == NULL) return false;
 
     // calculate the index of the data
@@ -140,7 +142,7 @@ bool setRemove(Set *set, void *data) {
 }
 
 // Query operations
-size_t setNElements(const Set *set) {
+size_t setNElements(const Set set) {
     size_t elementCounter = 0;
 
     // for each bucket, count the number of elements
@@ -155,7 +157,7 @@ size_t setNElements(const Set *set) {
     return elementCounter;
 }
 
-char *setToString(const Set *set) {
+char *setToString(const Set set) {
     if (set == NULL) return NULL;
 
     // calculate the estimated length of the string including the braces {}
@@ -204,7 +206,7 @@ char *setToString(const Set *set) {
 }
 
 // evaluation operations
-bool setContains(const Set *set, const void *data) {
+bool setContains(const Set set, const generic_flat_pointer data) {
     // calculate the index of the data
     unsigned int index = set->hashFunction(data, set->size);
     // search for the data in the bucket
@@ -216,7 +218,7 @@ bool setContains(const Set *set, const void *data) {
     return false;
 }
 
-bool setsEquals(const Set *setA, const Set *setB){
+bool setsEquals(const Set setA, const Set setB){
     // if the sets are not of the same type or have different sizes, 
     // they are not equal
     if (setA->type != setB->type) return false;
@@ -233,7 +235,7 @@ bool setsEquals(const Set *setA, const Set *setB){
     return true;
 }
 
-bool setIsSubsetOf(const Set *subset, const Set *set){
+bool setIsSubsetOf(const Set subset, const Set set){
     // if the sets are not of the same type or the subset has more elements 
     // than the set, "subset" is not a subset of the set
     if (subset->type != set->type) return false;
@@ -252,13 +254,13 @@ bool setIsSubsetOf(const Set *subset, const Set *set){
 }
 
 // set operations
-Set *setsUnion(const Set *setA, const Set *setB) {
+Set setsUnion(const Set setA, const Set setB) {
     // if any of the sets is NULL or they are not of the same type, return NULL
     if (setA == NULL || setB == NULL) return NULL;
     if (setA->type != setB->type) return NULL;
 
     // create a new set of the same type as setA and setB
-    Set *newSet = setCreate(setA->type);
+    Set newSet = setCreate(setA->type);
 
     // add all the elements of setA and setB to the new set
     for (size_t i = 0; i < setA->size; i++) {
@@ -278,13 +280,13 @@ Set *setsUnion(const Set *setA, const Set *setB) {
     return newSet;
 }
 
-Set *setsIntersection(const Set *setA, const Set *setB){
+Set setsIntersection(const Set setA, const Set setB){
     // if any of the sets is NULL or they are not of the same type, return NULL
     if (setA == NULL || setB == NULL) return NULL;
     if (setA->type != setB->type) return NULL;
 
     // create a new set of the same type as setA and setB
-    Set *newSet = setCreate(setA->type);
+    Set newSet = setCreate(setA->type);
 
     // add to the new set all the elements that are in both setA and setB
     for (size_t i = 0; i < setA->size; i++) {
@@ -300,13 +302,13 @@ Set *setsIntersection(const Set *setA, const Set *setB){
     return newSet;
 }
 
-Set *setsDifference(const Set *setA, const Set *setB){    
+Set setsDifference(const Set setA, const Set setB){    
     // if any of the sets is NULL or they are not of the same type, return NULL
     if (setA == NULL || setB == NULL) return NULL;
     if (setA->type != setB->type) return NULL;
 
     // create a new set of the same type as setA and setB
-    Set *newSet = setCreate(setA->type);
+    Set newSet = setCreate(setA->type);
 
     // add to the new set all the elements that are in setA but not in setB
     for (size_t i = 0; i < setA->size; i++) {
@@ -322,13 +324,13 @@ Set *setsDifference(const Set *setA, const Set *setB){
     return newSet;
 }
 
-Set *setsSymmetricDifference(const Set *setA, const Set *setB){
+Set setsSymmetricDifference(const Set setA, const Set setB){
     // if any of the sets is NULL or they are not of the same type, return NULL
     if (setA == NULL || setB == NULL) return NULL;
     if (setA->type != setB->type) return NULL;
 
     // create a new set of the same type as setA and setB
-    Set *newSet = setCreate(setA->type);
+    Set newSet = setCreate(setA->type);
 
     // add to the new set all the elements that are in setA but not in setB
     for (size_t i = 0; i < setA->size; i++) {
@@ -359,7 +361,7 @@ Set *setsSymmetricDifference(const Set *setA, const Set *setB){
 /// @param originalSet set from which the subsets are taken
 /// @param newSet set to which the subsets are added (power set)
 /// @param subset root subset
-void newInset(const Set *originalSet, Set *newSet, Set *subset){
+void newInset(const Set originalSet, Set newSet, Set subset){
     for (size_t i = 0; i < originalSet->size; i++) {
         Node *current = originalSet->buckets[i];
         while (current != NULL) {
@@ -371,7 +373,7 @@ void newInset(const Set *originalSet, Set *newSet, Set *subset){
             }
             // create a new subset that is the same as the subset and add to it
             // the current element
-            Set *newSubset = newSet->cloneFunction(subset);
+            Set newSubset = newSet->cloneFunction(subset);
             setAdd(newSubset, current->data);
             // if the new subset is already in the new set, destroy it and
             // continue, due to the fact that its supersets are already in the
@@ -392,14 +394,14 @@ void newInset(const Set *originalSet, Set *newSet, Set *subset){
     }
 }
 
-Set *powerSet(const Set *set){
+Set powerSet(const Set set){
     // if the set is NULL, return NULL
     if (set == NULL) return NULL;
 
     // create a new set of the same type as set
-    Set *newSet = setCreate(SET);
+    Set newSet = setCreate(SET);
     // add the empty set to the new set
-    Set *auxSet = setCreate(set->type);
+    Set auxSet = setCreate(set->type);
     setAdd(newSet, auxSet);
     setDestroy(auxSet);
 

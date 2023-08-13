@@ -1,8 +1,9 @@
-#include <types.h>
+#include <dataStructFunc.h>
 #include <set.h>
 
+
 #define DEFINE_CLONE_FUNCTION(TYPE, SUFFIX) \
-    void * SUFFIX##CloneFunction(const void *data) { \
+    generic_flat_pointer  SUFFIX##CloneFunction(const generic_flat_pointer data) { \
         if (!data) \
             return NULL; \
         TYPE *value = (TYPE *)data; \
@@ -26,11 +27,10 @@ DEFINE_CLONE_FUNCTION(double, double)
 DEFINE_CLONE_FUNCTION(long double, longdouble)
 
 
-void * stringCloneFunction(const void *data);
-void * setCloneFunction(const void *data);
+generic_flat_pointer  stringCloneFunction(const generic_flat_pointer data);
+generic_flat_pointer  setCloneFunction(const generic_flat_pointer data);
 
-void * (*CloneFunctions[_TYPE_COUNT])(const void *data) = {
-    NULL,
+generic_flat_pointer  (*CloneFunctions[_TYPE_COUNT])(const generic_flat_pointer data) = {
     charCloneFunction,
     ucharCloneFunction,
     shortCloneFunction,
@@ -43,13 +43,12 @@ void * (*CloneFunctions[_TYPE_COUNT])(const void *data) = {
     ulonglongCloneFunction,
     floatCloneFunction,
     doubleCloneFunction,
-    longdoubleCloneFunction,
     stringCloneFunction,
     setCloneFunction,
     NULL,
 };
 
-void *stringCloneFunction(const void *data) {
+generic_flat_pointer stringCloneFunction(const generic_flat_pointer data) {
     if (!data)
         return NULL;
 
@@ -63,16 +62,16 @@ void *stringCloneFunction(const void *data) {
     return copy;
 }
 
-void * setCloneFunction(const void *data){
+generic_flat_pointer  setCloneFunction(const generic_flat_pointer data){
     if (!data)
         return NULL;
-    const Set *set = data;
-    Set *copy = setCreate(set->type);
+    const Set set = (const Set) data;
+    Set copy = setCreate(set->type);
 
     for (size_t i = 0; i < set->size; i++) {
         Node *current = set->buckets[i];
         while (current != NULL) {
-            void * dataClone = set->cloneFunction(current->data);
+            generic_flat_pointer dataClone = set->cloneFunction(current->data);
             setAdd(copy, dataClone);
             free(dataClone);
             current = current->next;

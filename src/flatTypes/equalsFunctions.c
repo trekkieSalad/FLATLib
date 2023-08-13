@@ -1,9 +1,8 @@
-#include <types.h>
+#include <dataStructFunc.h>
 #include <set.h>
-#include <stdbool.h>
 
 #define DEFINE_EQUALS_FUNCTION(TYPE, SUFFIX) \
-    bool SUFFIX##EqualsFunction(const void *data1, const void *data2) { \
+    bool SUFFIX##EqualsFunction(const generic_flat_pointer data1, const generic_flat_pointer data2) { \
         TYPE value1 = *(TYPE *)data1; \
         TYPE value2 = *(TYPE *)data2; \
         return value1 == value2; \
@@ -23,11 +22,10 @@ DEFINE_EQUALS_FUNCTION(float, float)
 DEFINE_EQUALS_FUNCTION(double, double)
 DEFINE_EQUALS_FUNCTION(long double, longdouble)
 
-bool stringEqualsFunction(const void *data1, const void *data2);
-bool setEqualsFunction(const void *data1, const void *data2);
+bool stringEqualsFunction(const generic_flat_pointer data1, const generic_flat_pointer data2);
+bool setEqualsFunction(const generic_flat_pointer data1, const generic_flat_pointer data2);
 
-bool (*equalsFunctions[_TYPE_COUNT])(const void *data1, const void *data2) = {
-    NULL,
+bool (*equalsFunctions[_TYPE_COUNT])(const generic_flat_pointer data1, const generic_flat_pointer data2) = {
     charEqualsFunction,
     ucharEqualsFunction,
     shortEqualsFunction,
@@ -40,22 +38,21 @@ bool (*equalsFunctions[_TYPE_COUNT])(const void *data1, const void *data2) = {
     ulonglongEqualsFunction,
     floatEqualsFunction,
     doubleEqualsFunction,
-    longdoubleEqualsFunction,
     stringEqualsFunction,
     setEqualsFunction,
     NULL,
 };
 
-bool stringEqualsFunction(const void *data1, const void *data2) {
+bool stringEqualsFunction(const generic_flat_pointer data1, const generic_flat_pointer data2) {
     char *value1 = (char *)data1;
     char *value2 = (char *)data2;
 
     return strcmp(value1, value2) == 0;
 }
 
-bool setEqualsFunction(const void *data1, const void *data2) {
-    const Set *value1 = data1;
-    const Set *value2 = data2;
+bool setEqualsFunction(const generic_flat_pointer data1, const generic_flat_pointer data2) {
+    const Set value1 = (const Set)data1;
+    const Set value2 = (const Set)data2;
     return setsEquals(value1, value2);
 }
 

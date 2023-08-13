@@ -3,10 +3,10 @@
 #include <CUnit/Basic.h>
 
 void testSetEquals() {
-    Set *setA = setCreate(INT);
-    Set *setB = setCreate(INT);
-    Set *setC = setCreate(INT);
-    Set *setD = setCreate(INT);
+    Set setA = setCreate(INT);
+    Set setB = setCreate(INT);
+    Set setC = setCreate(INT);
+    Set setD = setCreate(INT);
 
     int i1 = 1, i2 = 2, i3 = 3, i4 = 4, i5 = 5;
 
@@ -44,15 +44,15 @@ void testSetEquals() {
 }
 
 void testSetSubset() {
-    Set *setA = setCreate(INT);
-    Set *setB = setCreate(INT);
-    Set *setC = setCreate(INT);
-    Set *setD = setCreate(INT);
-    Set *setE = setCreate(INT);
+    Set setA = setCreate(INT);
+    Set setB = setCreate(INT);
+    Set setC = setCreate(INT);
+    Set setD = setCreate(INT);
+    Set setE = setCreate(INT);
 
-    Set *setF = setCreate(STRING);
-    Set *setG = setCreate(STRING);
-    Set *setH = setCreate(STRING);
+    Set setF = setCreate(STRING);
+    Set setG = setCreate(STRING);
+    Set setH = setCreate(STRING);
 
     int i1 = 1, i2 = 2, i3 = 3, i4 = 4, i5 = 5;
 

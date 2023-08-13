@@ -1,4 +1,4 @@
-#include <types.h>
+#include <dataStructFunc.h>
 #include <set.h>
 
 #define DEFINE_HASH_FUNCTION(TYPE, SUFFIX) \
@@ -24,7 +24,6 @@ size_t stringSize();
 size_t setSize();
 
 size_t (*Sizes[_TYPE_COUNT])() = {
-    NULL,
     charSize,
     ucharSize,
     shortSize,
@@ -37,7 +36,6 @@ size_t (*Sizes[_TYPE_COUNT])() = {
     ulonglongSize,
     floatSize,
     doubleSize,
-    longdoubleSize,
     stringSize,
     setSize,
     NULL,
@@ -48,7 +46,7 @@ size_t stringSize(){
 }
 
 size_t setSize(){
-    return sizeof(Set);
+    return sizeof(struct set);
 }
 
 size_t getTypeSize(Type type){

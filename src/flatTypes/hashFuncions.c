@@ -1,9 +1,9 @@
-#include <types.h>
+#include <dataStructFunc.h>
 #include <set.h>
 
 #define DEFINE_HASH_FUNCTION(TYPE, SUFFIX, MULTIPLIER) \
-    unsigned int SUFFIX##HashFunction(const void *data, size_t size) { \
-        TYPE value = *(TYPE *)data; \
+    unsigned int SUFFIX##HashFunction(const generic_flat_pointer data, size_t size) { \
+        const TYPE value = *(const TYPE *)data; \
         return (unsigned int) (value * MULTIPLIER) % size; \
     }
 
@@ -19,13 +19,11 @@ DEFINE_HASH_FUNCTION(long long, longlong, 1)
 DEFINE_HASH_FUNCTION(unsigned long long, ulonglong, 1)
 DEFINE_HASH_FUNCTION(float, float, 1000)
 DEFINE_HASH_FUNCTION(double, double, 1000)
-DEFINE_HASH_FUNCTION(long double, longdouble, 1000)
 
-unsigned int stringHashFunction(const void *data, size_t size);
-unsigned int setHashFunction(const void *data, size_t size);
+unsigned int stringHashFunction(const generic_flat_pointer data, size_t size);
+unsigned int setHashFunction(const generic_flat_pointer data, size_t size);
 
-unsigned int (*hashFunctions[_TYPE_COUNT])(const void *data, size_t size) = {
-    NULL,
+unsigned int (*hashFunctions[_TYPE_COUNT])(const generic_flat_pointer data, size_t size) = {
     charHashFunction,
     ucharHashFunction,
     shortHashFunction,
@@ -38,14 +36,13 @@ unsigned int (*hashFunctions[_TYPE_COUNT])(const void *data, size_t size) = {
     ulonglongHashFunction,
     floatHashFunction,
     doubleHashFunction,
-    longdoubleHashFunction,
     stringHashFunction,
     setHashFunction,
     NULL,
 };
 
-unsigned int stringHashFunction(const void *data, size_t size){
-    char *value = (char *) data;
+unsigned int stringHashFunction(const generic_flat_pointer data, size_t size){
+    const char *value = (const char *) data;
     unsigned int hash = 0;
     for (size_t i = 0; i < strlen(value); i++){
         hash += value[i];
@@ -53,8 +50,8 @@ unsigned int stringHashFunction(const void *data, size_t size){
     return hash % size;
 }
 
-unsigned int setHashFunction(const void *data, size_t size){
-    const Set *value = data;
+unsigned int setHashFunction(const generic_flat_pointer data, size_t size){
+    const Set value = (const Set) data;
     long hash = 0;
     for (size_t i = 0; i < value->size; i++){
         Node *node = value->buckets[i];

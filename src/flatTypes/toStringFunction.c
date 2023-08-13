@@ -1,8 +1,8 @@
-#include <types.h>
+#include <dataStructFunc.h>
 #include <set.h>
 
 #define DEFINE_TO_STRING_FUNCTION(TYPE, SUFFIX, FORMAT) \
-    char * SUFFIX##ToStringFunction(const void *data) { \
+    char * SUFFIX##ToStringFunction(const generic_flat_pointer data) { \
         TYPE value = *(TYPE *)data; \
         char *string = malloc(12 * sizeof(char)); \
         sprintf(string, FORMAT, value); \
@@ -24,11 +24,10 @@ DEFINE_TO_STRING_FUNCTION(double, double, "%.4f")
 DEFINE_TO_STRING_FUNCTION(long double, longdouble, "%.4Lf")
 
 
-char * stringToStringFunction(const void *data);
-char * setToStringFunction(const void *data);
+char * stringToStringFunction(const generic_flat_pointer data);
+char * setToStringFunction(const generic_flat_pointer data);
 
-char * (*ToStringFunctions[_TYPE_COUNT])(const void *data) = {
-    NULL,
+char * (*ToStringFunctions[_TYPE_COUNT])(const generic_flat_pointer data) = {
     charToStringFunction,
     ucharToStringFunction,
     shortToStringFunction,
@@ -41,21 +40,20 @@ char * (*ToStringFunctions[_TYPE_COUNT])(const void *data) = {
     ulonglongToStringFunction,
     floatToStringFunction,
     doubleToStringFunction,
-    longdoubleToStringFunction,
     stringToStringFunction,
     setToStringFunction,
     NULL,
 };
 
-char * stringToStringFunction(const void *data){
+char * stringToStringFunction(const generic_flat_pointer data){
     char *value = *(char **)data;
     char *string = malloc((strlen(value) + 1) * sizeof(char));
     strcpy(string, value);
     return string;
 }
 
-char * setToStringFunction(const void *data){
-    const Set *set = data;
+char * setToStringFunction(const generic_flat_pointer data){
+    const Set set = (const Set) data;
     return setToString(set);
 }
 

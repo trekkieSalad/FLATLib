@@ -5,7 +5,7 @@
 void testSetCreate() {
 
     for (int i = 0; i < _TYPE_COUNT ; i++){        
-        Set *set = setCreate(i);
+        Set set = setCreate(i);
         CU_ASSERT_NOT_EQUAL(set, NULL);
         CU_ASSERT_NOT_EQUAL(set->buckets, NULL);
         CU_ASSERT_EQUAL(set->size, 11);
@@ -20,7 +20,7 @@ void testSetCreate() {
 }
 
 void testSetAdd() {
-    Set *set = setCreate(INT);
+    Set set = setCreate(INT);
     setAdd(set, &(int){1});
     setAdd(set, &(int){2});
     setAdd(set, &(int){3});
@@ -74,7 +74,7 @@ void testSetAdd() {
 }
 
 void testSetRemove() {
-    Set *set = setCreate(INT);
+    Set set = setCreate(INT);
     setAdd(set, &(int){1});
     setAdd(set, &(int){2});
     setAdd(set, &(int){3});
@@ -139,7 +139,7 @@ void testSetRemove() {
 }
 
 void testSetRepetition(){
-    Set *set = setCreate(INT);
+    Set set = setCreate(INT);
     setAdd(set, &(int){1});
     setAdd(set, &(int){2});
     setAdd(set, &(int){3});
@@ -169,14 +169,14 @@ void testSetRepetition(){
 }
 
 void testSetComposed(){
-    Set *set = setCreate(SET);
-    Set *inset1 = setCreate(INT);
-    Set *inset2 = setCreate(INT);
-    Set *inset3 = setCreate(INT);
-    Set *inset4 = setCreate(INT);
-    Set *inset5 = setCreate(STRING);
-    Set *inset6 = setCreate(STRING);
-    Set *inset7 = setCreate(STRING);
+    Set set = setCreate(SET);
+    Set inset1 = setCreate(INT);
+    Set inset2 = setCreate(INT);
+    Set inset3 = setCreate(INT);
+    Set inset4 = setCreate(INT);
+    Set inset5 = setCreate(STRING);
+    Set inset6 = setCreate(STRING);
+    Set inset7 = setCreate(STRING);
 
     setAdd(inset1, &(int){1});
     setAdd(inset1, &(int){3});

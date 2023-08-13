@@ -1,8 +1,8 @@
-#include <types.h>
+#include <dataStructFunc.h>
 #include <set.h>
 
 #define DEFINE_FREE_FUNCTION(TYPE, SUFFIX) \
-    void SUFFIX##FreeFunction(void *data) { \
+    void SUFFIX##FreeFunction(generic_flat_pointer data) { \
         if (!data) \
             return; \
         free(data); \
@@ -22,11 +22,10 @@ DEFINE_FREE_FUNCTION(float, float)
 DEFINE_FREE_FUNCTION(double, double)
 DEFINE_FREE_FUNCTION(long double, longdouble)
 
-void stringFreeFunction(void *data);
-void setFreeFunction(void *data);
+void stringFreeFunction(generic_flat_pointer data);
+void setFreeFunction(generic_flat_pointer data);
 
-void (*FreeFunctions[_TYPE_COUNT])(void *data) = {
-    NULL,
+void (*FreeFunctions[_TYPE_COUNT])(generic_flat_pointer data) = {
     charFreeFunction,
     ucharFreeFunction,
     shortFreeFunction,
@@ -39,21 +38,20 @@ void (*FreeFunctions[_TYPE_COUNT])(void *data) = {
     ulonglongFreeFunction,
     floatFreeFunction,
     doubleFreeFunction,
-    longdoubleFreeFunction,
     stringFreeFunction,
     setFreeFunction,
     NULL,
 };
 
-void stringFreeFunction(void *data) {
+void stringFreeFunction(generic_flat_pointer data) {
     if (!data)
         return;
     char *str = (char *)data;
     free(str);
 }
 
-void setFreeFunction(void *data){
-    Set *set = data;
+void setFreeFunction(generic_flat_pointer data){
+    Set set = (const Set) data;
 
     setDestroy(set);
 }
