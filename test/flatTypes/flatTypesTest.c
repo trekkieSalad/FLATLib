@@ -1,5 +1,6 @@
 #include <CUnit/CUnit.h>
 #include <CUnit/Basic.h>
+#include <flatMem.h>
 #include <flatPointer.h>
 #include <set.h>
 
@@ -9,10 +10,10 @@ void testTypeEvaluate() {
     setAdd(x, &(int){2});
     setAdd(x, &(int){3});
     flat_pointer fp = NEW_FLAT_POINTER(x);
-    printf("%s\n", setToString(FLAT_POINTER_TO_SET(fp)));
-    
+    char *str = setToString(FLAT_POINTER_TO_SET(fp));
+    printf("%s\n", str);
+    free(str);
     flat_free(fp);
-    
 }
 
 void typeSuite() {

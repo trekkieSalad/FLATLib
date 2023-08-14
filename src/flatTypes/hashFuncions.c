@@ -52,15 +52,7 @@ unsigned int stringHashFunction(const generic_flat_pointer data, size_t size){
 
 unsigned int setHashFunction(const generic_flat_pointer data, size_t size){
     const Set value = (const Set) data;
-    long hash = 0;
-    for (size_t i = 0; i < value->size; i++){
-        Node *node = value->buckets[i];
-        while (node != NULL){
-            hash += value->hashFunction(node->data, size);
-            node = node->next;
-        }
-    }
-    return hash % size;
+    return setHashcode(value) % size;
 }
 
 hashFunction getHashFunction(Type type){

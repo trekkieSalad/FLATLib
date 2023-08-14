@@ -66,18 +66,7 @@ generic_flat_pointer  setCloneFunction(const generic_flat_pointer data){
     if (!data)
         return NULL;
     const Set set = (const Set) data;
-    Set copy = setCreate(set->type);
-
-    for (size_t i = 0; i < set->size; i++) {
-        Node *current = set->buckets[i];
-        while (current != NULL) {
-            generic_flat_pointer dataClone = set->cloneFunction(current->data);
-            setAdd(copy, dataClone);
-            free(dataClone);
-            current = current->next;
-        }
-    }
-
+    Set copy = setClone(set);
     return copy;
 }
 

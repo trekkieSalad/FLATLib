@@ -1,12 +1,8 @@
 #include <flatPointer.h>
+#include <flatPointerPrivate.h>
 #include <set.h>
 #include <color.h>
 #include <stdio.h>
-
-struct _flat_pointer {
-    Type type;
-    generic_flat_pointer value;   
-};
 
 #define DEFINE_MAKE_FUNCTION(TYPE, CTYPE) \
     flat_pointer TYPE##_FLAT_POINTER(CTYPE x) { \
@@ -57,12 +53,6 @@ DEFINE_GET_FUNCTION(ULONG_LONG, unsigned long long)
 DEFINE_GET_FUNCTION(FLOAT, float)
 DEFINE_GET_FUNCTION(DOUBLE, double)
 DEFINE_GET_FUNCTION(STRING, char *)
-
-void flat_free(flat_pointer p) {
-    if (p == NULL) return;
-    free(p->value);
-    free(p);
-}
 
 const char *typeToString(Type type) {
     static const char *typeStrings[] = {

@@ -6,6 +6,24 @@
 #define DEFAULT_LOAD_FACTOR 0.75
 #define DEFAULT_SIZE 11
 
+struct node {
+    generic_flat_pointer data;
+    struct node *next;
+};
+
+typedef struct node Node;
+
+struct set {
+    Node **buckets;
+    size_t size;
+    Type type;
+    hashFunction hashFunction;
+    equalsFunction equalsFunction;
+    toStringFunction toStringFunction;
+    cloneFunction cloneFunction;
+    freeFunction freeFunction;
+};
+
 /// @brief Creates a new node with the given data.
 /// @param data Data to be stored in the node.
 static Node *createNode(generic_flat_pointer data) {
@@ -69,6 +87,24 @@ Set setCreate(Type type) {
     newSet->cloneFunction = getCloneFunction(type);
     newSet->freeFunction = getFreeFunction(type);
     return newSet;
+}
+
+
+Set     setClone        (const Set set){
+    if (set == NULL) return NULL;
+    Set copy = setCreate(set->type);
+
+    for (size_t i = 0; i < set->size; i++) {
+        Node *current = set->buckets[i];
+        while (current != NULL) {
+            generic_flat_pointer dataClone = set->cloneFunction(current->data);
+            setAdd(copy, dataClone);
+            free(dataClone);
+            current = current->next;
+        }
+    }
+
+    return copy;
 }
 
 void setDestroy(Set set) {
@@ -155,6 +191,24 @@ size_t setNElements(const Set set) {
         }
     }
     return elementCounter;
+}
+
+int setHashcode(const Set set) {
+    long hash = 0;
+
+    // for each element in the set, calculate its hash and add it to the set hash
+    for (size_t i = 0; i < set->size; i++) {
+        Node *current = set->buckets[i];
+        while (current != NULL) {
+            hash += set->hashFunction(current->data, set->size);
+            current = current->next;
+        }
+    }
+    return hash;
+}
+
+size_t setTypeSize() {
+    return sizeof(struct set);
 }
 
 char *setToString(const Set set) {

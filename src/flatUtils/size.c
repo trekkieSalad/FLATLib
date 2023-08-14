@@ -46,7 +46,7 @@ size_t stringSize(){
 }
 
 size_t setSize(){
-    return sizeof(struct set);
+    return setTypeSize();
 }
 
 size_t getTypeSize(Type type){

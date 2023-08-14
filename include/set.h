@@ -1,3 +1,27 @@
+/* flatset.h
+ *
+ * FLATLib - Library of formal languages and automata theory algorithms.
+ * Copyright (C) 2023  Daniel José García Paz
+ * 
+ * SPDX-License-Identifier: LGPL-2.1-or-later
+ *
+ * This library  is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ * 
+ * Author: Daniel José García Paz <daniel.garcia.paz@udc.es>
+ */
+
+
 #ifndef HASH_SET_H
 #define HASH_SET_H
 
@@ -5,22 +29,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-
-typedef struct node {
-    generic_flat_pointer data;
-    struct node *next;
-} Node;
-
-struct set {
-    Node **buckets;
-    size_t size;
-    Type type;
-    hashFunction hashFunction;
-    equalsFunction equalsFunction;
-    toStringFunction toStringFunction;
-    cloneFunction cloneFunction;
-    freeFunction freeFunction;
-};
 
 typedef struct set * Set;
 
@@ -41,6 +49,12 @@ Set     setCreate       (Type type);
  *   @return A pointer to the new set.
  */
 Set     setOfString     (char * string, Type type);
+/**
+ *  @brief Creates a copy of a set.
+ *  @param set Set to be cloned.
+ *  @return A pointer to the new set.
+ */
+Set     setClone        (const Set set);
 /**
  *   @brief Destroys a set, freeing all the memory allocated for it.
  *   @param set Set to be destroyed.
@@ -70,6 +84,19 @@ bool    setRemove       (Set set, generic_flat_pointer data);
  *   @return The number of elements in the set.
  */
 size_t  setNElements    (const Set set);
+/**
+ *   @brief Returns the hashcode of a set. 
+ * 
+ *   The hashcode is calculated using the hashcode of the elements in the set.
+ *   @param set Set to calculate the hashcode.
+ *   @return The hashcode of the set.
+ */
+int     setHashcode     (const Set set);
+/**
+ *   @brief Returns the "sizeof" of a set.
+ *   @return The "sizeof" of the set.
+ */
+size_t  setTypeSize   ();
 /**
  *   @brief Generates a string representation of a set. 
  *   @param set Set to be represented.
