@@ -1,9 +1,9 @@
 # Compiler settings
 CC          = gcc
 CFLAGS      = -g -Wall -pedantic -Wextra -std=c18
-TESTFLAGS   = -lcunit -lm
 
-# Directories
+# ===============================  DIRECTORIES  ===============================
+
 # Base directories
 INCLUDE_DIR 	= include
 SRC_DIR  		= src
@@ -12,52 +12,72 @@ TEST_DIR 		= test
 TEST_SRC_DIR 	= $(TEST_DIR)
 TEST_OUT_DIR 	= $(TEST_DIR)/out
 
+# Source directories
+UTILS_DIR 		= flatutils
+FLAT_TYPES_DIR 	= flattypes
+FLAT_MEM_DIR 	= flatmemory
+STRUCTS_DIR		= flatdatastructures
+SRC_DIRS 		= $(UTILS_DIR) $(FLAT_TYPES_DIR) $(FLAT_MEM_DIR) $(STRUCTS_DIR)
 
-UTILS_DIR 		= flatUtils
-FLAT_TYPES_DIR 	= flatTypes
-FLAT_MEM_DIR 	= flatMem
-SET_DIR   		= flatSet
-AF_DIR    		= af
-
+# Test directories
+SET_DIR    		= flatset
 TEST_DIRS 		= $(SET_DIR) $(FLAT_TYPES_DIR) $(UTILS_DIR) $(FLAT_MEM_DIR)
 
+# ==================================  FILES  ==================================
+
+# Source files
 SRC       		= $(wildcard $(SRC_DIR)/*.c)
 UTILS_SRC 		= $(wildcard $(SRC_DIR)/$(UTILS_DIR)/*.c)
 FLAT_TYPES_SRC	= $(wildcard $(SRC_DIR)/$(FLAT_TYPES_DIR)/*.c)
 FLAT_MEM_SRC	= $(wildcard $(SRC_DIR)/$(FLAT_MEM_DIR)/*.c)
-SET_SRC   		= $(wildcard $(SRC_DIR)/$(SET_DIR)/*.c)
+STRUCTS_SRC   	= $(wildcard $(SRC_DIR)/$(STRUCTS_DIR)/*.c)
 
+# Object files
 OBJ_UTILS 		= $(UTILS_SRC:$(SRC_DIR)/$(UTILS_DIR)/%.c=$(OBJ_DIR)/$(UTILS_DIR)/%.o)
 OBJ_FLAT_TYPES 	= $(FLAT_TYPES_SRC:$(SRC_DIR)/$(FLAT_TYPES_DIR)/%.c=$(OBJ_DIR)/$(FLAT_TYPES_DIR)/%.o)
 OBJ_FLAT_MEM 	= $(FLAT_MEM_SRC:$(SRC_DIR)/$(FLAT_MEM_DIR)/%.c=$(OBJ_DIR)/$(FLAT_MEM_DIR)/%.o)
-OBJ_SET   		= $(SET_SRC:$(SRC_DIR)/$(SET_DIR)/%.c=$(OBJ_DIR)/$(SET_DIR)/%.o)
+OBJ_SET   		= $(STRUCTS_SRC:$(SRC_DIR)/$(STRUCTS_DIR)/%.c=$(OBJ_DIR)/$(STRUCTS_DIR)/%.o)
 
-INCLUDES 		= -I$(INCLUDE_DIR) -I$(SRC_DIR)/$(INCLUDE_DIR)
+OBJS 			= $(OBJ_UTILS) $(OBJ_FLAT_TYPES) $(OBJ_FLAT_MEM) $(OBJ_SET)
 
-MAIN_TRGT 		= main
-LIB_TRGT  		= $(FLAT_TYPES_DIR) $(FLAT_MEM_DIR) $(SET_DIR) $(UTILS_DIR)
-SUBDIRS 		= $(SET_DIR) $(UTILS_DIR) $(FLAT_TYPES_DIR) $(FLAT_MEM_DIR)
+# ==================================  FLAGS  ==================================
 
-.PHONY: all clean runTest runSetTest
+# Includes flags
+INCLUDES_FLAGS 		= -I$(INCLUDE_DIR) -I$(SRC_DIR)/private_$(INCLUDE_DIR)
 
-all: $(LIB_TRGT)
+# Test flags
+TESTFLAGS   = -lcunit -lm
 
-$(OBJ_DIR):
-	mkdir -p $@
-	$(foreach dir,$(LIB_TRGT),mkdir -p $@/$(dir);)
+# ==================================  RULES  ==================================
 
-$(SUBDIRS): % : $(OBJ_UTILS) $(OBJ_SET) $(OBJ_FLAT_TYPES) $(OBJ_FLAT_MEM)
-	$(CC) $(wildcard $(TEST_SRC_DIR)/$(@F)/*.c) $^ -o $(TEST_OUT_DIR)/$(@F)Test $(INCLUDES) $(TESTFLAGS)
+.PHONY: all clean build build_test runTest runSetTest runUtilsTest runTypesTest
+
+all: build_tests runTest clean
+
+build: build_out_dirs $(OBJS)
+build_tests: build_test_out_dirs $(TEST_DIRS)
+
+build_out_dirs:
+	mkdir -p $(OBJ_DIR)
+	$(foreach dir,$(SRC_DIRS),mkdir -p $(OBJ_DIR)/$(dir);)
+
+build_test_out_dirs:
+	mkdir -p $(TEST_OUT_DIR)
 
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+$(TEST_DIRS): % : build
+	@echo ">>> Building $@ tests..."
+	$(CC) $(wildcard $(TEST_SRC_DIR)/$(@F)/*.c) $(OBJS) -o $(TEST_OUT_DIR)/$(@F)Test $(INCLUDES_FLAGS) $(TESTFLAGS)
+
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	$(CC) $(CFLAGS) $(INCLUDES_FLAGS) -c $< -o $@
 
 runTest:
 	$(foreach dir,$(TEST_DIRS),$(TEST_OUT_DIR)/$(dir)Test;)
 
 runSetTest:
-	$(TEST_OUT_DIR)/$(SET_DIR)Test
+	$(TEST_OUT_DIR)/$(STRUCTS_DIR)Test
 
 runUtilsTest:
 	$(TEST_OUT_DIR)/$(UTILS_DIR)Test
@@ -67,4 +87,4 @@ runTypesTest:
 
 clean: 
 	rm -rf $(OBJ_DIR)
-	rm -rf $(TEST_OUT_DIR)/*
+	rm -rf $(TEST_OUT_DIR)
