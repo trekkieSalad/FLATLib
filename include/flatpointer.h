@@ -42,21 +42,21 @@ typedef struct _flat_pointer    *flat_pointer;
  * @param data Data to be converted to a flat pointer.
  * @return A flat pointer with the data as value.
  */
-#define NEW_FLAT_POINTER(data) _Generic((data), \
-    char:               CHAR_FLAT_POINTER, \
-    unsigned char:      UCHAR_FLAT_POINTER, \
-    short:              SHORT_FLAT_POINTER, \
-    unsigned short:     USHORT_FLAT_POINTER, \
-    int:                INT_FLAT_POINTER, \
-    unsigned int:       UINT_FLAT_POINTER, \
-    long:               LONG_FLAT_POINTER, \
-    unsigned long:      ULONG_FLAT_POINTER, \
-    long long:          LONG_LONG_FLAT_POINTER, \
-    unsigned long long: ULONG_LONG_FLAT_POINTER, \
-    float:              FLOAT_FLAT_POINTER, \
-    double:             DOUBLE_FLAT_POINTER, \
-    char *:             STRING_FLAT_POINTER, \
-    FlatSet:                SET_FLAT_POINTER \
+#define FLAT_POINTER_CREATOR(data) _Generic((data), \
+    char:               CHAR_FLAT_POINTER,          \
+    unsigned char:      UCHAR_FLAT_POINTER,         \
+    short:              SHORT_FLAT_POINTER,         \
+    unsigned short:     USHORT_FLAT_POINTER,        \
+    int:                INT_FLAT_POINTER,           \
+    unsigned int:       UINT_FLAT_POINTER,          \
+    long:               LONG_FLAT_POINTER,          \
+    unsigned long:      ULONG_FLAT_POINTER,         \
+    long long:          LONG_LONG_FLAT_POINTER,     \
+    unsigned long long: ULONG_LONG_FLAT_POINTER,    \
+    float:              FLOAT_FLAT_POINTER,         \
+    double:             DOUBLE_FLAT_POINTER,        \
+    char *:             STRING_FLAT_POINTER,        \
+    FlatSet:            SET_FLAT_POINTER            \
 )(data)
 
 /**
@@ -283,6 +283,31 @@ char *              FLAT_POINTER_TO_STRING      (flat_pointer x);
  * @param x Flat pointer to be converted.
  * @return The value of the flat pointer as a set.
  */
-FlatSet                 FLAT_POINTER_TO_SET         (flat_pointer x);
+FlatSet             FLAT_POINTER_TO_SET         (flat_pointer x);
+
+/**
+ * @brief Creates a flat pointer from a generic flat pointer (void *). 
+ * 
+ * @param type Type of the flat pointer.
+ * @param value Generic flat pointer to the value.
+ * @return A flat pointer with the data as value.
+ */
+flat_pointer    flat_pointer_create     (FlatType               type, 
+                                         generic_flat_pointer   value);
+/**
+ * @brief Destroys a flat pointer.
+ * 
+ * Frees the memory allocated by a flat pointer.
+ * 
+ * @param fp Flat pointer to be destroyed.
+ */
+void            flat_pointer_destroy    (flat_pointer           fp);
+/**
+ * @brief Gets the type of a flat pointer.
+ * 
+ * @param fp Flat pointer to get the type.
+ * @return The type of the flat pointer.
+ */
+FlatType        flat_pointer_get_type   (flat_pointer           fp);
 
 #endif

@@ -9,11 +9,14 @@ void test_flat_type_evaluate() {
     flat_set_add_element(x, &(int){1});
     flat_set_add_element(x, &(int){2});
     flat_set_add_element(x, &(int){3});
-    flat_pointer fp = NEW_FLAT_POINTER(x);
+    flat_pointer fp = FLAT_POINTER_CREATOR(x);
+    flat_pointer fp2 = FLAT_POINTER_CREATOR(5);
     char *str = flat_set_to_string(FLAT_POINTER_TO_SET(fp));
     printf("%s\n", str);
+    printf("%d\n", FLAT_POINTER_TO_INT(fp2));
     free(str);
     flat_free(fp);
+    flat_free(fp2);
 }
 
 void flat_type_suite() {

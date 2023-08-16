@@ -25,6 +25,38 @@
 
 #include <prime.h>
 
+/**
+ * SECTION: prime_functions
+ * @title: Prime functions
+ * @short_description: Functions for primality testing and prime number
+ *      generation.
+ * 
+ * This module contains the implementation of functions for generating prime 
+ * values for set sizes. It implements the Miller-Rabin primality test.
+ * 
+ * The Miller-Rabin test is based on Fermat's little theorem, which states that
+ * if 'p' is a prime number, then for any integer 'a', the number 'a^p - a' is
+ * an integer multiple of 'p'. The Miller-Rabin test uses this theorem to
+ * determine if a number is prime or not.
+ * 
+ * On this way, the Miller-Rabin primality test is a probabilistic algorithm 
+ * that determines whether a number is prime or not using a fixed number of 
+ * iterations. This makes the algorithm highly efficient for numbers of any 
+ * number of digits. Thus, it becomes feasible to generate prime numbers with 
+ * a cyclomatic complexity of O(k log^3 n), where 'k' represents the number of 
+ * iterations (30 in this context), and 'n' is the number of digits in the 
+ * tested number.
+ * 
+ * It's important to note that the Miller-Rabin test is a probabilistic 
+ * algorithm. Consequently, there is a possibility that the algorithm could 
+ * label a number as prime when it is not. However, the likelihood of this 
+ * occurrence is quite low. If the algorithm returns a non-prime number, it 
+ * wouldn't pose a significant issue. This is due to the fact that hash tables 
+ * can accommodate various sizes. Additionally, the use of prime numbers is 
+ * merely a recommendation to optimize hash table usage and reduce collision 
+ * occurrences.
+ */
+
 // Función para calcular (a^b) % m
 long long module(long long a, long long b, long long m) {
     long long result = 1;
@@ -82,7 +114,7 @@ int is_probable_prime(long long n, int k) {
 
 long long next_prime_size(long long actual) {
     long long prime = actual * 2;
-    while (!is_probable_prime(prime, 100))
+    while (!is_probable_prime(prime, 30))
         prime++;
     return prime;
 }

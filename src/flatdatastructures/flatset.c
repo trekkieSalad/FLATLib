@@ -49,8 +49,11 @@ struct _FlatSet {
     FreeFunction freeFunction;
 };
 
-/// @brief Creates a new node with the given data.
-/// @param data Data to be stored in the node.
+/**
+ * @brief Creates a new node with the given data.
+ * @param data Data to be stored in the node.
+ * @return New node with the given data.
+ */
 static Node *create_node(generic_flat_pointer data) {
     Node *newNode = malloc(sizeof(Node));
     newNode->data = data;
@@ -58,8 +61,10 @@ static Node *create_node(generic_flat_pointer data) {
     return newNode;
 }
 
-/// @brief Rehashes the set, doubling its size and reassigning the elements.
-/// @param set Set to be rehashed.
+/**
+ * @brief Rehashes the set, doubling its size and reassigning the elements.
+ * @param set Set to be rehashed.
+ */
 static void rehash(FlatSet set) {
     // get next prime size as new size and allocate new buckets
     size_t newSize = next_prime_size(set->size);
@@ -84,9 +89,11 @@ static void rehash(FlatSet set) {
     set->size = newSize;
 }
 
-/// @brief Destroys a bucket, freeing all the memory allocated for it.
-/// @param set Set to which the bucket belongs.
-/// @param bucket Bucket to be destroyed.
+/**
+ * @brief Destroys a bucket, freeing all the memory allocated for it.
+ * @param set Set to which the bucket belongs.
+ * @param bucket Bucket to be destroyed.
+ */
 static void destroy_bucket(FlatSet set, Node *bucket) {
     if (bucket == NULL) {
         return;
@@ -434,11 +441,13 @@ FlatSet flat_set_symmetric_difference(const FlatSet setA, const FlatSet setB){
     return newSet;
 }
 
-/// @brief This function adds to the newSet all the subsets of the originalSet 
-/// that contain the "subset"
-/// @param originalSet set from which the subsets are taken
-/// @param newSet set to which the subsets are added (power set)
-/// @param subset root subset
+/**
+ * @brief This function adds to the newSet all the subsets of the originalSet 
+ * that contain the "subset"
+ * @param originalSet set from which the subsets are taken
+ * @param newSet set to which the subsets are added (power set)
+ * @param subset root subset
+ */
 void new_inset(const FlatSet originalSet, FlatSet newSet, FlatSet subset){
     for (size_t i = 0; i < originalSet->size; i++) {
         Node *current = originalSet->buckets[i];

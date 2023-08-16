@@ -29,6 +29,12 @@
 #include <stdlib.h>
 #include <math.h>
 
-long long next_prime_size(long long);
+/**
+ * @brief Get the next prime number after the double given.
+ * 
+ * @param actualSize The number to get the next prime size.
+ * @return long long The next prime size.
+ */
+long long next_prime_size(long long actualSize);
 
 #endif // PRIME_H
