@@ -22,9 +22,8 @@
  * 
  *  Author: Daniel José García Paz <daniel.garcia.paz@udc.es>
  */
-
+#define __STDC_WANT_LIB_EXT2__ 1
 #include <flatpointer.h>
-#include <flattypes.h>
 #include <flatset.h>
 #include <color.h>
 #include <stdio.h>
@@ -32,7 +31,7 @@
 
 struct _flat_pointer {
     FlatType type;
-    generic_flat_pointer value;   
+    generic_flat_pointer value;
 };
 
 #define DEFINE_MAKE_FUNCTION(TYPE, CTYPE) \
@@ -139,4 +138,8 @@ void flat_pointer_destroy(flat_pointer fp) {
 
 FlatType flat_pointer_get_type(flat_pointer fp) {
     return fp->type;
+}
+
+char *flat_pointer_to_string(flat_pointer fp) {
+    return get_to_string_function(fp->type)(fp->value);
 }

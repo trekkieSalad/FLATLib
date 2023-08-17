@@ -309,5 +309,11 @@ void            flat_pointer_destroy    (flat_pointer           fp);
  * @return The type of the flat pointer.
  */
 FlatType        flat_pointer_get_type   (flat_pointer           fp);
+/**
+ * @brief Generates a string representation of a flat pointer value.
+ * @param fp Flat pointer to be represented.
+ * @return A string representation of the flat pointer value.
+*/
+char * flat_pointer_to_string(flat_pointer fp);
 
 #endif

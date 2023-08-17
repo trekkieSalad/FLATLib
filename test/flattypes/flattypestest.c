@@ -11,10 +11,9 @@ void test_flat_type_evaluate() {
     flat_set_add_element(x, &(int){3});
     flat_pointer fp = FLAT_POINTER_CREATOR(x);
     flat_pointer fp2 = FLAT_POINTER_CREATOR(5);
-    char *str = flat_set_to_string(FLAT_POINTER_TO_SET(fp));
-    printf("%s\n", str);
-    printf("%d\n", FLAT_POINTER_TO_INT(fp2));
-    free(str);
+    printf("%s\n", flat_pointer_to_string(fp));
+    printf("%s\n", flat_pointer_to_string(fp2));
+
     flat_free(fp);
     flat_free(fp2);
 }
@@ -30,7 +29,7 @@ void add_all_tests() {
 
 int main() {
     
-    CU_initialize_registry();
+    int x= CU_initialize_registry();
     CU_basic_set_mode(CU_BRM_VERBOSE);
     add_all_tests();
     CU_basic_run_tests();
