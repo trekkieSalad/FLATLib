@@ -1,8 +1,6 @@
 #include <CUnit/CUnit.h>
 #include <CUnit/Basic.h>
-#include <flatmem.h>
-#include <flatpointer.h>
-#include <flatset.h>
+#include <flatlib.h>
 
 void test_flat_type_evaluate() {
     FlatSet x = flat_set_create(INT);
