@@ -78,6 +78,17 @@
 #define DEFAULT_COLOR       "\033[39m"
 #define COLOR(r, g, b)      "\033[38;2;" #r ";" #g ";" #b "m"
 
+// Bright colors
+
+#define BR_BLACK            "\033[90m"
+#define BR_RED              "\033[91m"
+#define BR_GREEN            "\033[92m"
+#define BR_YELLOW           "\033[93m"
+#define BR_BLUE             "\033[94m"
+#define BR_MAGENTA          "\033[95m"
+#define BR_CYAN             "\033[96m"
+#define BR_WHITE            "\033[97m"
+
 // Background colors
 
 #define BG_BLACK            "\033[40m"
@@ -91,26 +102,15 @@
 #define BG_DEFAULT          "\033[49m"
 #define BG_COLOR(r, g, b)   "\033[48;2;" #r ";" #g ";" #b "m"
 
-// Bright colors
-
-#define BRIGHT_BLACK        "\033[90m"
-#define BRIGHT_RED          "\033[91m"
-#define BRIGHT_GREEN        "\033[92m"
-#define BRIGHT_YELLOW       "\033[93m"
-#define BRIGHT_BLUE         "\033[94m"
-#define BRIGHT_MAGENTA      "\033[95m"
-#define BRIGHT_CYAN         "\033[96m"
-#define BRIGHT_WHITE        "\033[97m"
-
 // Bright background colors
 
-#define BG_BRIGHT_BLACK     "\033[100m"
-#define BG_BRIGHT_RED       "\033[101m"
-#define BG_BRIGHT_GREEN     "\033[102m"
-#define BG_BRIGHT_YELLOW    "\033[103m"
-#define BG_BRIGHT_BLUE      "\033[104m"
-#define BG_BRIGHT_MAGENTA   "\033[105m"
-#define BG_BRIGHT_CYAN      "\033[106m"
-#define BG_BRIGHT_WHITE     "\033[107m"
+#define BG_BR_BLACK         "\033[100m"
+#define BG_BR_RED           "\033[101m"
+#define BG_BR_GREEN         "\033[102m"
+#define BG_BR_YELLOW        "\033[103m"
+#define BG_BR_BLUE          "\033[104m"
+#define BG_BR_MAGENTA       "\033[105m"
+#define BG_BR_CYAN          "\033[106m"
+#define BG_BR_WHITE         "\033[107m"
 
 #endif // COLOR_H

@@ -1,6 +1,6 @@
 # Compiler settings
 CC          = gcc
-CFLAGS      = -g -Wall -pedantic -Wextra -std=c18
+CFLAGS      = -g -Wall -Wextra -Wpedantic
 
 # ===============================  DIRECTORIES  ===============================
 
@@ -21,7 +21,8 @@ SRC_DIRS 		= $(UTILS_DIR) $(FLAT_TYPES_DIR) $(FLAT_MEM_DIR) $(STRUCTS_DIR)
 
 # Test directories
 SET_DIR    		= flatset
-TEST_DIRS 		= $(SET_DIR) $(FLAT_TYPES_DIR) $(UTILS_DIR) $(FLAT_MEM_DIR)
+TUPLE_DIR 		= flattuple
+TEST_DIRS 		= $(SET_DIR) $(FLAT_TYPES_DIR) $(UTILS_DIR) $(FLAT_MEM_DIR) $(TUPLE_DIR)
 
 # ==================================  FILES  ==================================
 
@@ -67,7 +68,7 @@ build_test_out_dirs:
 
 $(TEST_DIRS): % : build
 	@echo ">>> Building $@ tests..."
-	$(CC) $(wildcard $(TEST_SRC_DIR)/$(@F)/*.c) $(OBJS) -o $(TEST_OUT_DIR)/$(@F)Test $(INCLUDES_FLAGS) $(TESTFLAGS)
+	$(CC) $(CFLAGS) $(wildcard $(TEST_SRC_DIR)/$(@F)/*.c) $(OBJS) -o $(TEST_OUT_DIR)/$(@F)Test $(INCLUDES_FLAGS) $(TESTFLAGS)
 
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c

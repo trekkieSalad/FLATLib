@@ -26,6 +26,8 @@
 #ifndef SET_TYPES_H
 #define SET_TYPES_H
 
+#include <stdbool.h>
+
 typedef enum {
     CHAR,
     UCHAR,

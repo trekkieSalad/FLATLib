@@ -24,6 +24,7 @@
  */
 #define __STDC_WANT_LIB_EXT2__ 1
 #include <flatpointer.h>
+#include <flattypes_priv.h>
 #include <flatset.h>
 #include <color.h>
 #include <stdio.h>
@@ -53,8 +54,6 @@ struct _flat_pointer {
         } \
         return *(CTYPE *)p->value; \
     }
-
-static const char *flat_type_to_string(FlatType type);
 
 DEFINE_MAKE_FUNCTION(CHAR, char)
 DEFINE_MAKE_FUNCTION(UCHAR, unsigned char)
@@ -91,19 +90,6 @@ DEFINE_GET_FUNCTION(FLOAT, float)
 DEFINE_GET_FUNCTION(DOUBLE, double)
 DEFINE_GET_FUNCTION(STRING, char *)
 
-static const char *flat_type_to_string(FlatType type) {
-    static const char *typeStrings[] = {
-        "char",         "unsigned char",        "short",        "unsigned short", 
-        "int",          "unsigned int",         "long",         "unsigned long", 
-        "long long",    "unsigned long long",   "float",        "double", 
-        "char *",       "Set",                  "User Type",    "Unknown Type"
-    };
-
-    if (type >= 0 && type < _TYPE_COUNT) {
-        return typeStrings[type];
-    }
-    return typeStrings[_TYPE_COUNT]; // Unknown Type
-}
 
 FlatSet FLAT_POINTER_TO_SET(flat_pointer x){
     if (x->type != SET) {
@@ -116,6 +102,7 @@ FlatSet FLAT_POINTER_TO_SET(flat_pointer x){
 }
 
 flat_pointer flat_pointer_create(FlatType type, generic_flat_pointer value) {
+    if (value == NULL) return NULL;
     flat_pointer fp = (flat_pointer) malloc(sizeof(struct _flat_pointer));
     fp->type = type;
     fp->value = value;
@@ -141,5 +128,11 @@ FlatType flat_pointer_get_type(flat_pointer fp) {
 }
 
 char *flat_pointer_to_string(flat_pointer fp) {
+    if (fp == NULL) return strdup("nil ");
     return get_to_string_function(fp->type)(fp->value);
 }
+
+flat_pointer flat_pointer_clone(flat_pointer fp) {
+    if (fp == NULL) return NULL;
+    return flat_pointer_create(fp->type, get_clone_function(fp->type)(fp->value));
+}   

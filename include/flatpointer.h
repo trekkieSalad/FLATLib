@@ -316,4 +316,6 @@ FlatType        flat_pointer_get_type   (flat_pointer           fp);
 */
 char * flat_pointer_to_string(flat_pointer fp);
 
+flat_pointer flat_pointer_clone(flat_pointer fp);
+
 #endif
