@@ -324,6 +324,29 @@ bool flat_tuple_equals(FlatTuple tuple1, FlatTuple tuple2){
     return true;
 }
 
+int flat_tuple_hashcode(FlatTuple tuple) {
+    if (tuple == NULL) CRASH_ON_ERROR("tuple is not defined\n");
+    int hash = 0;
+    for (size_t i = 0; i < tuple->size; i++)
+        hash += flat_pointer_hashcode(tuple->elements[i]);
+    return hash;
+}
+
+FlatTuple flat_tuple_clone(FlatTuple tuple) {
+    if (tuple == NULL) CRASH_ON_ERROR("tuple is not defined\n");
+    FlatTuple newTuple = malloc(sizeof(struct _FlatTuple));
+    newTuple->size = tuple->size;
+    newTuple->fill = tuple->fill;
+    newTuple->elements = malloc(sizeof(flat_pointer) * newTuple->size);
+    newTuple->types = malloc(sizeof(FlatType) * newTuple->size);
+    for (size_t i = 0; i < newTuple->size; i++)
+    {
+        newTuple->elements[i] = flat_pointer_clone(tuple->elements[i]);
+        newTuple->types[i] = tuple->types[i];
+    }
+    return newTuple;
+}
+
 //      Tuple functions
 //      ---------------
 

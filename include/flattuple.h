@@ -90,6 +90,8 @@ size_t          flat_tuple_index_of_element         (FlatTuple      tuple,
 char *          flat_tuple_to_string                (FlatTuple      tuple);
 bool            flat_tuple_equals                   (FlatTuple      tuple1, 
                                                      FlatTuple      tuple2);
+int             flat_tuple_hashcode                 (FlatTuple      tuple);
+FlatTuple       flat_tuple_clone                    (FlatTuple      tuple);
 
 //      Tuple functions
 //      ---------------

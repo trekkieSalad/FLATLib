@@ -33,15 +33,14 @@ int main(){
 
     printf("---------111-----------\n");
 
-    FlatTuple tuple2 = flat_tuple_concat(tuple, tuple);
-    printf("-----------222---------\n");
+    FlatTuple tuple2 = flat_tuple_clone(tuple);
     str = flat_tuple_to_string(tuple2);
     printf("%s\n", str);
-    printf("-----------333---------\n");
     def = flat_tuple_definition_to_string(tuple2);
     printf("%s\n", def);
 
-    printf("%lu\n", flat_tuple_index_of_element(tuple2, FLAT_POINTER_CREATOR(2)));
+    printf("%d\n", flat_tuple_hashcode(tuple));
+    printf("%d\n", flat_tuple_hashcode(tuple2));
 
     free(str);
     free(def);
