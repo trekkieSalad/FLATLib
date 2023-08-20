@@ -25,6 +25,7 @@
 
 #include <datastructfunc.h>
 #include <flatset.h>
+#include <flattuple.h>
 
 #define DEFINE_HASH_FUNCTION(TYPE, SUFFIX, MULTIPLIER) \
     unsigned int SUFFIX##_hash_function(const generic_flat_pointer data) { \
@@ -47,6 +48,8 @@ DEFINE_HASH_FUNCTION(double, double, 1000)
 
 unsigned int string_hash_function(const generic_flat_pointer data);
 unsigned int set_hash_function(const generic_flat_pointer data);
+unsigned int tuple_hash_function(const generic_flat_pointer data);
+
 
 unsigned int (*_hash_functions[_TYPE_COUNT])(const generic_flat_pointer data) = {
     char_hash_function,
@@ -63,7 +66,7 @@ unsigned int (*_hash_functions[_TYPE_COUNT])(const generic_flat_pointer data) = 
     double_hash_function,
     string_hash_function,
     set_hash_function,
-    NULL,
+    tuple_hash_function,
 };
 
 unsigned int string_hash_function(const generic_flat_pointer data){
@@ -78,6 +81,11 @@ unsigned int string_hash_function(const generic_flat_pointer data){
 unsigned int set_hash_function(const generic_flat_pointer data){
     const FlatSet value = (const FlatSet) data;
     return flat_set_hashcode(value);
+}
+
+unsigned int tuple_hash_function(const generic_flat_pointer data){
+    const FlatTuple value = (const FlatTuple) data;
+    return flat_tuple_hashcode(value);
 }
 
 HashFunction get_hash_function(FlatType type){

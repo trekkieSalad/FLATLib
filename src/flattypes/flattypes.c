@@ -5,7 +5,8 @@ char *flat_type_to_string(FlatType type) {
         "char",         "unsigned char",        "short",        "unsigned short", 
         "int",          "unsigned int",         "long",         "unsigned long", 
         "long long",    "unsigned long long",   "float",        "double", 
-        "char *",       "Set",                  "User Type",    "Unknown Type"
+        "char *",       "Set",                  "Tuple",        "User Type",
+        "Unknown Type"
     };
 
     if (type >= 0 && type < _TYPE_COUNT) {

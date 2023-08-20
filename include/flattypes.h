@@ -43,6 +43,7 @@ typedef enum {
     DOUBLE,
     STRING,
     SET,
+    TUPLE,
     USER_DEFINED,
     _TYPE_COUNT,
 }FlatType;

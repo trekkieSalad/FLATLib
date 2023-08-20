@@ -25,6 +25,7 @@
 
 #include <datastructfunc.h>
 #include <flatset.h>
+#include <flattuple.h>
 
 #define DEFINE_EQUALS_FUNCTION(TYPE, SUFFIX) \
     bool SUFFIX##_equals_function(const generic_flat_pointer data1, const generic_flat_pointer data2) { \
@@ -49,6 +50,7 @@ DEFINE_EQUALS_FUNCTION(long double, longdouble)
 
 bool string_equals_function(const generic_flat_pointer data1, const generic_flat_pointer data2);
 bool set_equals_function(const generic_flat_pointer data1, const generic_flat_pointer data2);
+bool tuple_equals_function(const generic_flat_pointer data1, const generic_flat_pointer data2);
 
 bool (*_equals_functions[_TYPE_COUNT])(const generic_flat_pointer data1, const generic_flat_pointer data2) = {
     char_equals_function,
@@ -65,7 +67,7 @@ bool (*_equals_functions[_TYPE_COUNT])(const generic_flat_pointer data1, const g
     double_equals_function,
     string_equals_function,
     set_equals_function,
-    NULL,
+    tuple_equals_function,
 };
 
 bool string_equals_function(const generic_flat_pointer data1, const generic_flat_pointer data2) {
@@ -79,6 +81,12 @@ bool set_equals_function(const generic_flat_pointer data1, const generic_flat_po
     const FlatSet value1 = (const FlatSet)data1;
     const FlatSet value2 = (const FlatSet)data2;
     return flat_set_equals(value1, value2);
+}
+
+bool tuple_equals_function(const generic_flat_pointer data1, const generic_flat_pointer data2) {
+    const FlatTuple value1 = (const FlatTuple)data1;
+    const FlatTuple value2 = (const FlatTuple)data2;
+    return flat_tuple_equals(value1, value2);
 }
 
 EqualsFunction get_equals_function(FlatType type) {

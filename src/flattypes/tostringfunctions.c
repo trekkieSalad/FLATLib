@@ -25,6 +25,7 @@
 
 #include <datastructfunc.h>
 #include <flatset.h>
+#include <flattuple.h>
 
 #define DEFINE_TO_STRING_FUNCTION(TYPE, SUFFIX, FORMAT) \
     char * SUFFIX##_to_string_function(const generic_flat_pointer data) { \
@@ -51,6 +52,7 @@ DEFINE_TO_STRING_FUNCTION(long double, longdouble, "%.4Lf")
 
 char * string_to_string_function(const generic_flat_pointer data);
 char * set_to_string_function(const generic_flat_pointer data);
+char * tuple_to_string_function(const generic_flat_pointer data);
 
 char * (*_to_string_functions[_TYPE_COUNT])(const generic_flat_pointer data) = {
     char_to_string_function,
@@ -67,7 +69,7 @@ char * (*_to_string_functions[_TYPE_COUNT])(const generic_flat_pointer data) = {
     double_to_string_function,
     string_to_string_function,
     set_to_string_function,
-    NULL,
+    tuple_to_string_function,
 };
 
 char * string_to_string_function(const generic_flat_pointer data){
@@ -77,6 +79,11 @@ char * string_to_string_function(const generic_flat_pointer data){
 char * set_to_string_function(const generic_flat_pointer data){
     const FlatSet set = (const FlatSet) data;
     return flat_set_to_string(set);
+}
+
+char * tuple_to_string_function(const generic_flat_pointer data){
+    const FlatTuple tuple = (const FlatTuple) data;
+    return flat_tuple_to_string(tuple);
 }
 
 ToStringFunction get_to_string_function(FlatType type){

@@ -25,6 +25,7 @@
 
 #include <datastructfunc.h>
 #include <flatset.h>
+#include <flattuple.h>
 
 
 #define DEFINE_CLONE_FUNCTION(TYPE, SUFFIX) \
@@ -54,6 +55,7 @@ DEFINE_CLONE_FUNCTION(long double, longdouble)
 
 generic_flat_pointer  string_clone_function(const generic_flat_pointer data);
 generic_flat_pointer  set_clone_function(const generic_flat_pointer data);
+generic_flat_pointer  tuple_clone_function(const generic_flat_pointer data);
 
 generic_flat_pointer  (*_clone_functions[_TYPE_COUNT])(const generic_flat_pointer data) = {
     char_clone_function,
@@ -70,7 +72,7 @@ generic_flat_pointer  (*_clone_functions[_TYPE_COUNT])(const generic_flat_pointe
     double_clone_function,
     string_clone_function,
     set_clone_function,
-    NULL,
+    tuple_clone_function
 };
 
 generic_flat_pointer string_clone_function(const generic_flat_pointer data) {
@@ -92,6 +94,14 @@ generic_flat_pointer  set_clone_function(const generic_flat_pointer data){
         return NULL;
     const FlatSet set = (const FlatSet) data;
     FlatSet copy = flat_set_clone(set);
+    return copy;
+}
+
+generic_flat_pointer  tuple_clone_function(const generic_flat_pointer data){
+    if (!data)
+        return NULL;
+    const FlatTuple tuple = (const FlatTuple) data;
+    FlatTuple copy = flat_tuple_clone(tuple);
     return copy;
 }
 

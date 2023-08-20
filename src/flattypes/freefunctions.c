@@ -25,6 +25,7 @@
 
 #include <datastructfunc.h>
 #include <flatset.h>
+#include <flattuple.h>
 
 #define DEFINE_FREE_FUNCTION(TYPE, SUFFIX) \
     void SUFFIX##_free_function(generic_flat_pointer data) { \
@@ -49,6 +50,7 @@ DEFINE_FREE_FUNCTION(long double, longdouble)
 
 void string_free_function(generic_flat_pointer data);
 void set_free_function(generic_flat_pointer data);
+void tuple_free_function(generic_flat_pointer data);
 
 void (*_free_functions[_TYPE_COUNT])(generic_flat_pointer data) = {
     char_free_function,
@@ -65,7 +67,7 @@ void (*_free_functions[_TYPE_COUNT])(generic_flat_pointer data) = {
     double_free_function,
     string_free_function,
     set_free_function,
-    NULL,
+    tuple_free_function,
 };
 
 void string_free_function(generic_flat_pointer data) {
@@ -77,8 +79,12 @@ void string_free_function(generic_flat_pointer data) {
 
 void set_free_function(generic_flat_pointer data){
     FlatSet set = (FlatSet) data;
-
     flat_set_destroy(set);
+}
+
+void tuple_free_function(generic_flat_pointer data){
+    FlatTuple tuple = (FlatTuple) data;
+    flat_tuple_destroy(tuple);
 }
 
 FreeFunction get_free_function(FlatType type){
