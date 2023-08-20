@@ -71,10 +71,7 @@ char * (*_to_string_functions[_TYPE_COUNT])(const generic_flat_pointer data) = {
 };
 
 char * string_to_string_function(const generic_flat_pointer data){
-    char *value = *(char **)data;
-    char *string = malloc((strlen(value) + 1) * sizeof(char));
-    strcpy(string, value);
-    return string;
+    return get_clone_function(STRING)(data);
 }
 
 char * set_to_string_function(const generic_flat_pointer data){

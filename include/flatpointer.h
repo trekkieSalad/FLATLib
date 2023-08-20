@@ -318,4 +318,8 @@ char * flat_pointer_to_string(flat_pointer fp);
 
 flat_pointer flat_pointer_clone(flat_pointer fp);
 
+bool    flat_pointer_equals     (flat_pointer fp1, flat_pointer fp2);
+
+int     flat_pointer_hashcode   (flat_pointer fp);
+
 #endif

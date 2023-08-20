@@ -67,7 +67,14 @@ DEFINE_MAKE_FUNCTION(LONG_LONG, long long)
 DEFINE_MAKE_FUNCTION(ULONG_LONG, unsigned long long)
 DEFINE_MAKE_FUNCTION(FLOAT, float)
 DEFINE_MAKE_FUNCTION(DOUBLE, double)
-DEFINE_MAKE_FUNCTION(STRING, char *)
+//DEFINE_MAKE_FUNCTION(STRING, char *)
+
+flat_pointer STRING_FLAT_POINTER(char *x) {
+    flat_pointer fp = malloc(sizeof(struct _flat_pointer));
+    fp->type = STRING;
+    fp->value = strdup(x);
+    return fp;
+}
 
 flat_pointer SET_FLAT_POINTER(FlatSet x){
     flat_pointer fp = (flat_pointer) malloc(sizeof(struct _flat_pointer));
@@ -136,3 +143,15 @@ flat_pointer flat_pointer_clone(flat_pointer fp) {
     if (fp == NULL) return NULL;
     return flat_pointer_create(fp->type, get_clone_function(fp->type)(fp->value));
 }   
+
+bool flat_pointer_equals(flat_pointer fp1, flat_pointer fp2) {
+    if (fp1 == NULL && fp2 == NULL) return true;
+    if (fp1 == NULL || fp2 == NULL) return false;
+    if (fp1->type != fp2->type) return false;
+    return get_equals_function(fp1->type)(fp1->value, fp2->value);
+}
+
+int flat_pointer_hashcode(flat_pointer fp) {
+    if (fp == NULL) return 0;
+    return get_hash_function(fp->type)(fp->value);
+}

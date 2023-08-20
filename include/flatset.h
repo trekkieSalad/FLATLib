@@ -55,12 +55,12 @@ FlatSet     flat_set_of_string              (char * string, FlatType type);
  *  @param set Set to be cloned.
  *  @return A pointer to the new set.
  */
-FlatSet     flat_set_clone                       (const FlatSet set);
+FlatSet     flat_set_clone                  (const FlatSet set);
 /**
  *   @brief Destroys a set, freeing all the memory allocated for it.
  *   @param set Set to be destroyed.
  */
-void    flat_set_destroy                     (FlatSet set);
+void        flat_set_destroy                (FlatSet set);
 /**
  *   @brief Adds an element to a initialized set. If the element is already in 
  *   the set, it is not added. Elements must be of the same type as the
@@ -69,7 +69,7 @@ void    flat_set_destroy                     (FlatSet set);
  *   @param data Element to be added.
  *   @return True if the element was added, false otherwise.
  */
-bool    flat_set_add_element            (FlatSet set, generic_flat_pointer data);
+bool        flat_set_add_element            (FlatSet set, generic_flat_pointer data);
 /**
  *   @brief Removes an element from a initialized set. If the element is not in 
  *   the set, it is not removed. Elements must be of the same type as the
@@ -78,13 +78,13 @@ bool    flat_set_add_element            (FlatSet set, generic_flat_pointer data)
  *   @param data Element to be removed.
  *   @return True if the element was removed, false otherwise.
  */
-bool    flat_set_remove_element         (FlatSet set, generic_flat_pointer data);
+bool        flat_set_remove_element         (FlatSet set, generic_flat_pointer data);
 /**
  *   @brief Returns the number of elements in a initialized set.
  *   @param set Set to be consulted.
  *   @return The number of elements in the set.
  */
-size_t  flat_set_cardinality            (const FlatSet set);
+size_t      flat_set_cardinality            (const FlatSet set);
 /**
  *   @brief Returns the hashcode of a set. 
  * 
@@ -92,18 +92,18 @@ size_t  flat_set_cardinality            (const FlatSet set);
  *   @param set Set to calculate the hashcode.
  *   @return The hashcode of the set.
  */
-int     flat_set_hashcode               (const FlatSet set);
+int         flat_set_hashcode               (const FlatSet set);
 /**
  *   @brief Returns the "sizeof" of a set.
  *   @return The "sizeof" of the set.
  */
-size_t  flat_set_type_size              ();
+size_t      flat_set_type_size              ();
 /**
  *   @brief Generates a string representation of a set. 
  *   @param set Set to be represented.
  *   @return A pointer to the string representation of the set.
  */
-char *  flat_set_to_string              (const FlatSet set);
+char *      flat_set_to_string              (const FlatSet set);
 /**
  *   @brief Checks if a set contains an element. Elements must be of the same type as the
  *   set. \n
@@ -112,7 +112,7 @@ char *  flat_set_to_string              (const FlatSet set);
  *   @param data Element to be checked.
  *   @return True if the element is in the set, false otherwise.
  */
-bool    flat_set_contains               (const FlatSet set, const generic_flat_pointer data);
+bool        flat_set_contains               (const FlatSet set, const generic_flat_pointer data);
 /**
  *   @brief Checks if two sets are equal. Two sets are equal if they have the same type
  *   and the same elements. \n
@@ -121,7 +121,7 @@ bool    flat_set_contains               (const FlatSet set, const generic_flat_p
  *   @param setB Second set to be compared.
  *   @return True if the sets are equal, false otherwise.
  */
-bool    flat_set_equals                 (const FlatSet setA, const FlatSet setB);
+bool        flat_set_equals                 (const FlatSet setA, const FlatSet setB);
 /**
  *   @brief Checks if a set is subset of another set. A set is subset of another set if
  *   all its elements are in the other set. Set and subset must be of the same type. \n
@@ -130,7 +130,7 @@ bool    flat_set_equals                 (const FlatSet setA, const FlatSet setB)
  *   @param subset Set to be checked.
  *   @return True if the set is subset of the other set, false otherwise.
  */
-bool    flat_set_is_subset_of           (const FlatSet subset, const FlatSet set);
+bool        flat_set_is_subset_of           (const FlatSet subset, const FlatSet set);
 /**
  *   @brief Creates a new set with the union (A ∪ B) of two sets. Sets must be of the same type
  *   and the new set will have the same type as the sets. \n

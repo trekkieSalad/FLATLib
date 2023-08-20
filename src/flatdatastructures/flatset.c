@@ -76,7 +76,7 @@ static void rehash(FlatSet set) {
         while (bucket != NULL) {
             Node *next = bucket->next;
             // reassign the bucket to the new buckets
-            size_t newIndex = set->hashFunction(bucket->data, newSize);
+            size_t newIndex = set->hashFunction(bucket->data) % newSize;
             bucket->next = newBuckets[newIndex];
             newBuckets[newIndex] = bucket;
             bucket = next;
@@ -157,7 +157,7 @@ bool flat_set_add_element(FlatSet set, generic_flat_pointer data) {
         rehash(set);
 
     // calculate the index of the data
-    size_t index = set->hashFunction(data, set->size);
+    size_t index = set->hashFunction(data) % set->size;
     
     // get the bucket and check if the data is already in the set
     Node *bucket = set->buckets[index];
@@ -179,7 +179,7 @@ bool flat_set_remove_element(FlatSet set, generic_flat_pointer data) {
     if (set == NULL || data == NULL) return false;
 
     // calculate the index of the data
-    size_t index = set->hashFunction(data, set->size);
+    size_t index = set->hashFunction(data) % set->size;
 
     Node *prev = NULL;
     Node *curr = set->buckets[index];
@@ -231,7 +231,7 @@ int flat_set_hashcode(const FlatSet set) {
     for (size_t i = 0; i < set->size; i++) {
         Node *current = set->buckets[i];
         while (current != NULL) {
-            hash += set->hashFunction(current->data, set->size);
+            hash += set->hashFunction(current->data) % set->size;
             current = current->next;
         }
     }
@@ -293,7 +293,7 @@ char *flat_set_to_string(const FlatSet set) {
 // evaluation operations
 bool flat_set_contains(const FlatSet set, const generic_flat_pointer data) {
     // calculate the index of the data
-    unsigned int index = set->hashFunction(data, set->size);
+    unsigned int index = set->hashFunction(data) % set->size;
     // search for the data in the bucket
     for (Node *current = set->buckets[index]; current != NULL; current = current->next) {
         if (set->equalsFunction(current->data, data)) {

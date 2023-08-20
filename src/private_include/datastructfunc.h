@@ -31,8 +31,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-typedef unsigned int            (*HashFunction)     (const generic_flat_pointer data, 
-                                                     size_t                     size);
+typedef unsigned int            (*HashFunction)     (const generic_flat_pointer data);
 typedef bool                    (*EqualsFunction)   (const generic_flat_pointer setA, 
                                                      const generic_flat_pointer setB);
 typedef char *                  (*ToStringFunction) (const generic_flat_pointer data);

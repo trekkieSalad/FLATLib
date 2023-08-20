@@ -134,6 +134,16 @@ void _flat_tuple_filler(FlatTuple tuple, flat_pointer   fp, ...) {
     tuple->fill = 1;
 }
 
+bool _flat_tuple_verify_definition(FlatTuple tuple, 
+        FlatType *definition, size_t size){
+    if (tuple == NULL) CRASH_ON_ERROR("tuple is not defined\n");
+    if (tuple->size != size) return false;
+    for (size_t i = 0; i < tuple->size; i++)
+        if (tuple->types[i] != definition[i])
+            return false;
+    return true;
+}
+
 //==================================================================//
 //              Public functions                                    //
 //==================================================================//
@@ -234,11 +244,58 @@ FlatType *flat_tuple_get_definition(FlatTuple      tuple){
     return types;
 }
 
+flat_pointer * flat_tuple_to_array(FlatTuple tuple){
+    if (tuple == NULL) CRASH_ON_ERROR("tuple is not defined\n");
+    flat_pointer *array = malloc(sizeof(flat_pointer) * tuple->size);
+    for (size_t i = 0; i < tuple->size; i++)
+        array[i] = flat_pointer_clone(tuple->elements[i]);
+    return array;
+}
+
 flat_pointer flat_tuple_get_element(FlatTuple tuple, size_t index) {
+    if (tuple == NULL) CRASH_ON_ERROR("tuple is not defined\n");
     if (index >= tuple->size)
         CRASH_ON_ERROR("index %lu out of bounds\n", index);
     return tuple->elements[index];
 }
+
+size_t flat_tuple_length(FlatTuple tuple){
+    if (tuple == NULL) CRASH_ON_ERROR("tuple is not defined\n");
+    return tuple->size;
+}
+
+bool flat_tuple_contains(FlatTuple tuple, flat_pointer element) {
+    if (tuple == NULL) CRASH_ON_ERROR("tuple is not defined\n");
+    if (tuple->fill == 0) CRASH_ON_ERROR("tuple is not filled\n");
+    for (size_t i = 0; i < tuple->size; i++)
+        if (flat_pointer_equals(tuple->elements[i], element))
+            return true;
+    return false;
+}
+
+size_t flat_tuple_count_elements(FlatTuple tuple, flat_pointer element) {
+    if (tuple == NULL) CRASH_ON_ERROR("tuple is not defined\n");
+    if (element == NULL) CRASH_ON_ERROR("element is not defined\n");
+    if (tuple->fill == 0) CRASH_ON_ERROR("tuple is not filled\n");
+    size_t count = 0;
+    for (size_t i = 0; i < tuple->size; i++)
+        if (flat_pointer_equals(tuple->elements[i], element))
+            count++;
+    return count;
+}
+
+size_t flat_tuple_index_of_element(FlatTuple tuple, flat_pointer element) {
+    if (tuple == NULL) CRASH_ON_ERROR("tuple is not defined\n");
+    if (element == NULL) CRASH_ON_ERROR("element is not defined\n");
+    if (tuple->fill == 0) CRASH_ON_ERROR("tuple is not filled\n");
+    for (size_t i = 0; i < tuple->size; i++)
+        if (flat_pointer_equals(tuple->elements[i], element))
+            return i;
+    return -1;
+}
+
+//      FLAT ADT functions
+//      ------------------
 
 char * flat_tuple_to_string(FlatTuple tuple) {
     if (!tuple->fill) CRASH_ON_ERROR("tuple has not elements\n");
@@ -259,6 +316,48 @@ char * flat_tuple_to_string(FlatTuple tuple) {
     return str;
 }
 
-size_t flat_tuple_length(FlatTuple tuple){
-    return tuple->size;
+bool flat_tuple_equals(FlatTuple tuple1, FlatTuple tuple2){
+    if (tuple1->size != tuple2->size) return false;
+    for (size_t i = 0; i < tuple1->size; i++)
+        if (flat_pointer_equals(tuple1->elements[i], tuple2->elements[i]) == false)
+            return false;
+    return true;
+}
+
+//      Tuple functions
+//      ---------------
+
+FlatTuple flat_tuple_slice(FlatTuple tuple, size_t start, size_t end) {
+    if (start > end) CRASH_ON_ERROR("start index %lu is greater than end index %lu\n", start, end);
+    if (end > tuple->size) CRASH_ON_ERROR("end index %lu is out of bounds\n", end);
+    FlatTuple newTuple = malloc(sizeof(struct _FlatTuple));
+    newTuple->size = end - start;
+    newTuple->fill = 1;
+    newTuple->elements = malloc(sizeof(flat_pointer) * newTuple->size);
+    newTuple->types = malloc(sizeof(FlatType) * newTuple->size);
+    for (size_t i = 0; i < newTuple->size; i++)
+    {
+        newTuple->elements[i] = flat_pointer_clone(tuple->elements[start + i]);
+        newTuple->types[i] = tuple->types[start + i];
+    }
+    return newTuple;
+}
+
+FlatTuple flat_tuple_concat(FlatTuple tuple1, FlatTuple tuple2) {
+    FlatTuple newTuple = malloc(sizeof(struct _FlatTuple));
+    newTuple->size = tuple1->size + tuple2->size;
+    newTuple->fill = 1;
+    newTuple->elements = malloc(sizeof(flat_pointer) * newTuple->size);
+    newTuple->types = malloc(sizeof(FlatType) * newTuple->size);
+    for (size_t i = 0; i < tuple1->size; i++)
+    {
+        newTuple->elements[i] = flat_pointer_clone(tuple1->elements[i]);
+        newTuple->types[i] = tuple1->types[i];
+    }
+    for (size_t i = 0; i < tuple2->size; i++)
+    {
+        newTuple->elements[tuple1->size + i] = flat_pointer_clone(tuple2->elements[i]);
+        newTuple->types[tuple1->size + i] = tuple2->types[i];
+    }
+    return newTuple;
 }

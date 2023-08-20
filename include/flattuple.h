@@ -35,14 +35,19 @@ typedef struct _FlatTuple * FlatTuple;
 #define flat_tuple_create(...) _flat_tuple_create(__VA_ARGS__, END_OF_TUPLE)
 #define flat_tuple_define(...) _flat_tuple_define(__VA_ARGS__, END_OF_TUPLE)
 #define flat_tuple_filler(...) _flat_tuple_filler(__VA_ARGS__, END_OF_TUPLE)
+#define flat_tuple_verify_definition(tuple, definition) _flat_tuple_verify_definition(tuple, definition, sizeof(definition)/sizeof(FlatType))
 
 //==================================================================//
 //              Public functions for internal use                   //
 //==================================================================//
 
-FlatTuple   _flat_tuple_create              (flat_pointer   fp,     ...);
-FlatTuple   _flat_tuple_define              (FlatType       type,   ...);
-void        _flat_tuple_filler              (FlatTuple      tuple,  
+FlatTuple       _flat_tuple_create                  (flat_pointer   fp,     ...);
+FlatTuple       _flat_tuple_define                  (FlatType       type,   ...);
+void            _flat_tuple_filler                  (FlatTuple      tuple, 
+                                                     flat_pointer   fp,     ...);
+bool            _flat_tuple_verify_definition       (FlatTuple      tuple, 
+                                                     FlatType *     definition,
+                                                     size_t         size);
 
 //==================================================================//
 //              Public functions                                    //
@@ -50,49 +55,48 @@ void        _flat_tuple_filler              (FlatTuple      tuple,
 
 //      Initialization functions
 //      ------------------------
-                                             flat_pointer   fp,     ...);
-FlatTuple   flat_tuple_create_from_array    (flat_pointer * array, 
-                                             size_t         size);
-FlatTuple   flat_tuple_define_from_array    (FlatType *     types, 
-                                             size_t         size);
-void        flat_tuple_filler_from_array    (FlatTuple      tuple,
-                                            flat_pointer *  array, 
-                                            size_t          size);
+FlatTuple       flat_tuple_create_from_array        (flat_pointer * array, 
+                                                     size_t         size);
+FlatTuple       flat_tuple_define_from_array        (FlatType *     types, 
+                                                     size_t         size);
+void            flat_tuple_filler_from_array        (FlatTuple      tuple,
+                                                     flat_pointer * array, 
+                                                     size_t         size);
                                             
 //      Destruction functions
 //      ---------------------
 
-void        flat_tuple_destroy              (FlatTuple      tuple);
+void            flat_tuple_destroy                  (FlatTuple      tuple);
 
 //      Query functions
 //      ---------------
 
-char *      flat_tuple_definition_to_string (FlatTuple      tuple);
-FlatType *  flat_tuple_get_definition       (FlatTuple      tuple);
-flat_pointer flat_tuple_get_element         (FlatTuple      tuple, 
-                                             size_t         index);
-char *      flat_tuple_to_string            (FlatTuple      tuple);
-size_t      flat_tuple_length               (FlatTuple      tuple);
+char *          flat_tuple_definition_to_string     (FlatTuple      tuple);
+FlatType *      flat_tuple_get_definition           (FlatTuple      tuple);
+flat_pointer *  flat_tuple_to_array                 (FlatTuple      tuple);
+flat_pointer    flat_tuple_get_element              (FlatTuple      tuple, 
+                                                     size_t         index);
+size_t          flat_tuple_length                   (FlatTuple      tuple);
+bool            flat_tuple_contains                 (FlatTuple      tuple1,
+                                                     flat_pointer   fp);
+size_t          flat_tuple_count_elements           (FlatTuple      tuple, 
+                                                     flat_pointer   fp);
+size_t          flat_tuple_index_of_element         (FlatTuple      tuple, 
+                                                     flat_pointer   fp);
 
-//      TODO functions
-//      --------------
-bool        flat_tuple_verify_definition    (FlatTuple      tuple, 
-                                             FlatType *     definition);
-bool        flat_tuple_equals               (FlatTuple      tuple1, 
-                                             FlatTuple      tuple2);
-FlatTuple   flat_tuple_slice                (FlatTuple      tuple, 
-                                             size_t         start, 
-                                             size_t         end);
-FlatTuple   flat_tuple_concat               (FlatTuple      tuple1,
-                                             FlatTuple      tuple2);
-bool        flat_tuple_contains             (FlatTuple      tuple1,
-                                             flat_pointer   fp);
-void        flat_tuple_unpack               (FlatTuple      tuple, 
-                                             flat_pointer   element1, ...);
-flat_pointer *flat_tuple_to_array           (FlatTuple      tuple);
-int         flat_tuple_count_elements       (FlatTuple      tuple, 
-                                             flat_pointer   fp);
-size_t      flat_tuple_index_of_element     (FlatTuple      tuple, 
-                                             flat_pointer   fp);
+//      FLAT ADT functions
+//      ------------------
 
+char *          flat_tuple_to_string                (FlatTuple      tuple);
+bool            flat_tuple_equals                   (FlatTuple      tuple1, 
+                                                     FlatTuple      tuple2);
+
+//      Tuple functions
+//      ---------------
+
+FlatTuple       flat_tuple_slice                    (FlatTuple      tuple, 
+                                                     size_t         start, 
+                                                     size_t         end);
+FlatTuple       flat_tuple_concat                   (FlatTuple      tuple1,
+                                                     FlatTuple      tuple2);
 #endif
