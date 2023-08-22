@@ -27,6 +27,7 @@
 #define FLAT_POINTER_H
 
 #include <flatset.h>
+#include <flattuple.h>
 #include <flatcode.h>
 
 /**
