@@ -22,12 +22,28 @@
  * 
  *  Author: Daniel José García Paz <daniel.garcia.paz@udc.es>
  */
+/**
+ * @file flattypes.h
+ * 
+ * @brief This file contains the definition of the flat types and the generic
+ * flat pointer. These types are used to store and manipulate values of different
+ * types in the same data structure and have a typed context to retrieve them.
+ */
 
 #ifndef SET_TYPES_H
 #define SET_TYPES_H
 
 #include <stdbool.h>
 
+/**
+ * @typedef FlatType
+ * 
+ * @brief A flat type is a type that can be stored in a flat pointer. It is used
+ * to store and reference values of different types in the same data structure.
+ * 
+ * The flat types are the primitive types, strings, sets, tuples and user 
+ * defined types.
+ */
 typedef enum {
     CHAR,
     UCHAR,
@@ -48,6 +64,10 @@ typedef enum {
     _TYPE_COUNT,
 }FlatType;
 
+/**
+ * @typedef generic_flat_pointer
+ * @brief A flat pointer is an alias for a void pointer.
+ */
 typedef     void *              generic_flat_pointer;
 typedef     char                flatchar;
 typedef     unsigned char       flatuchar;

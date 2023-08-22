@@ -27,11 +27,19 @@
 #include <flatset.h>
 #include <flattuple.h>
 
+//==================================================================//
+//              MACRO definitions                                   //
+//==================================================================//
+
 #define DEFINE_HASH_FUNCTION(TYPE, SUFFIX, MULTIPLIER) \
-    unsigned int SUFFIX##_hash_function(const generic_flat_pointer data) { \
+    static unsigned int SUFFIX##_hash_function(const generic_flat_pointer data) { \
         const TYPE value = *(const TYPE *)data; \
         return (unsigned int) (value * MULTIPLIER); \
     }
+
+//==================================================================//
+//              Private functions                                   //
+//==================================================================//
 
 DEFINE_HASH_FUNCTION(char, char, 1)
 DEFINE_HASH_FUNCTION(unsigned char, uchar, 1)
@@ -46,12 +54,11 @@ DEFINE_HASH_FUNCTION(unsigned long long, ulonglong, 1)
 DEFINE_HASH_FUNCTION(float, float, 1000)
 DEFINE_HASH_FUNCTION(double, double, 1000)
 
-unsigned int string_hash_function(const generic_flat_pointer data);
-unsigned int set_hash_function(const generic_flat_pointer data);
-unsigned int tuple_hash_function(const generic_flat_pointer data);
+static unsigned int string_hash_function(const generic_flat_pointer data);
+static unsigned int set_hash_function(const generic_flat_pointer data);
+static unsigned int tuple_hash_function(const generic_flat_pointer data);
 
-
-unsigned int (*_hash_functions[_TYPE_COUNT])(const generic_flat_pointer data) = {
+static unsigned int (*_hash_functions[_TYPE_COUNT])(const generic_flat_pointer data) = {
     char_hash_function,
     uchar_hash_function,
     short_hash_function,
@@ -69,7 +76,7 @@ unsigned int (*_hash_functions[_TYPE_COUNT])(const generic_flat_pointer data) = 
     tuple_hash_function,
 };
 
-unsigned int string_hash_function(const generic_flat_pointer data){
+static unsigned int string_hash_function(const generic_flat_pointer data){
     const char *value = (const char *) data;
     unsigned int hash = 0;
     for (size_t i = 0; i < strlen(value); i++){
@@ -78,15 +85,19 @@ unsigned int string_hash_function(const generic_flat_pointer data){
     return hash;
 }
 
-unsigned int set_hash_function(const generic_flat_pointer data){
+static unsigned int set_hash_function(const generic_flat_pointer data){
     const FlatSet value = (const FlatSet) data;
     return flat_set_hashcode(value);
 }
 
-unsigned int tuple_hash_function(const generic_flat_pointer data){
+static unsigned int tuple_hash_function(const generic_flat_pointer data){
     const FlatTuple value = (const FlatTuple) data;
     return flat_tuple_hashcode(value);
 }
+
+//==================================================================//
+//              Public functions                                    //
+//==================================================================//
 
 HashFunction get_hash_function(FlatType type){
     return _hash_functions[type];

@@ -3,6 +3,10 @@
 
 #include <flattypes.h>
 
+//==================================================================//
+//              Public functions                                    //
+//==================================================================//
+
 char *flat_type_to_string(FlatType type);
 
 #endif // FLATTYPES_PRIV_H

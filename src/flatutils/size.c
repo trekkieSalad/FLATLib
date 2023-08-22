@@ -23,6 +23,10 @@
  *  Author: Daniel José García Paz <daniel.garcia.paz@udc.es>
  */
 
+//==================================================================//
+//              MACRO definitions                                   //
+//==================================================================//
+
 #include <datastructfunc.h>
 #include <flatset.h>
 
@@ -30,6 +34,10 @@
     size_t SUFFIX##_size() { \
         return sizeof(TYPE); \
     }
+
+//==================================================================//
+//              Private functions                                   //
+//==================================================================//
 
 DEFINE_HASH_FUNCTION(char, char)
 DEFINE_HASH_FUNCTION(unsigned char, uchar)
@@ -73,6 +81,10 @@ size_t string_size(){
 size_t set_size(){
     return flat_set_type_size();
 }
+
+//==================================================================//
+//              Public functions                                    //
+//==================================================================//
 
 size_t get_type_size(FlatType type){
     return sizes[type]();

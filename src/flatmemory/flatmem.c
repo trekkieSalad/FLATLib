@@ -25,6 +25,6 @@
 
 #include <flatmem.h>
 
-void flat_free(flat_pointer p) {
+void flat_free(FlatPointer p) {
     flat_pointer_destroy(p);
 }

@@ -27,12 +27,19 @@
 #include <flatset.h>
 #include <flattuple.h>
 
+//==================================================================//
+//              MACRO definitions                                   //
+//==================================================================//
+
 #define DEFINE_FREE_FUNCTION(TYPE, SUFFIX) \
-    void SUFFIX##_free_function(generic_flat_pointer data) { \
-        if (!data) \
-            return; \
+    static void SUFFIX##_free_function(generic_flat_pointer data) { \
+        if (!data) return; \
         free(data); \
     }
+
+//==================================================================//
+//              Private functions                                   //
+//==================================================================//
 
 DEFINE_FREE_FUNCTION(char, char)
 DEFINE_FREE_FUNCTION(unsigned char, uchar)
@@ -46,13 +53,12 @@ DEFINE_FREE_FUNCTION(long long, longlong)
 DEFINE_FREE_FUNCTION(unsigned long long, ulonglong)
 DEFINE_FREE_FUNCTION(float, float)
 DEFINE_FREE_FUNCTION(double, double)
-DEFINE_FREE_FUNCTION(long double, longdouble)
 
-void string_free_function(generic_flat_pointer data);
-void set_free_function(generic_flat_pointer data);
-void tuple_free_function(generic_flat_pointer data);
+static void string_free_function(generic_flat_pointer data);
+static void set_free_function(generic_flat_pointer data);
+static void tuple_free_function(generic_flat_pointer data);
 
-void (*_free_functions[_TYPE_COUNT])(generic_flat_pointer data) = {
+static void (*_free_functions[_TYPE_COUNT])(generic_flat_pointer data) = {
     char_free_function,
     uchar_free_function,
     short_free_function,
@@ -70,22 +76,26 @@ void (*_free_functions[_TYPE_COUNT])(generic_flat_pointer data) = {
     tuple_free_function,
 };
 
-void string_free_function(generic_flat_pointer data) {
+static void string_free_function(generic_flat_pointer data) {
     if (!data)
         return;
     char *str = (char *)data;
     free(str);
 }
 
-void set_free_function(generic_flat_pointer data){
+static void set_free_function(generic_flat_pointer data){
     FlatSet set = (FlatSet) data;
     flat_set_destroy(set);
 }
 
-void tuple_free_function(generic_flat_pointer data){
+static void tuple_free_function(generic_flat_pointer data){
     FlatTuple tuple = (FlatTuple) data;
     flat_tuple_destroy(tuple);
 }
+
+//==================================================================//
+//              Public functions                                    //
+//==================================================================//
 
 FreeFunction get_free_function(FlatType type){
     return _free_functions[type];

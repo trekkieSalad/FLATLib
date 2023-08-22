@@ -27,13 +27,21 @@
 #include <flatset.h>
 #include <flattuple.h>
 
+//==================================================================//
+//              MACRO definitions                                   //
+//==================================================================//
+
 #define DEFINE_TO_STRING_FUNCTION(TYPE, SUFFIX, FORMAT) \
-    char * SUFFIX##_to_string_function(const generic_flat_pointer data) { \
+    static char * SUFFIX##_to_string_function(const generic_flat_pointer data) { \
         TYPE value = *(TYPE *)data; \
         char *string = malloc(12 * sizeof(char)); \
         sprintf(string, FORMAT, value); \
         return string; \
     }
+
+//==================================================================//
+//              Private functions                                   //
+//==================================================================//
 
 DEFINE_TO_STRING_FUNCTION(char, char, "%c")
 DEFINE_TO_STRING_FUNCTION(unsigned char, uchar, "%c")
@@ -47,14 +55,13 @@ DEFINE_TO_STRING_FUNCTION(long long, longlong, "%lld")
 DEFINE_TO_STRING_FUNCTION(unsigned long long, ulonglong, "%lld")
 DEFINE_TO_STRING_FUNCTION(float, float, "%.2f")
 DEFINE_TO_STRING_FUNCTION(double, double, "%.4f")
-DEFINE_TO_STRING_FUNCTION(long double, longdouble, "%.4Lf")
 
 
-char * string_to_string_function(const generic_flat_pointer data);
-char * set_to_string_function(const generic_flat_pointer data);
-char * tuple_to_string_function(const generic_flat_pointer data);
+static char * string_to_string_function(const generic_flat_pointer data);
+static char * set_to_string_function(const generic_flat_pointer data);
+static char * tuple_to_string_function(const generic_flat_pointer data);
 
-char * (*_to_string_functions[_TYPE_COUNT])(const generic_flat_pointer data) = {
+static char * (*_to_string_functions[_TYPE_COUNT])(const generic_flat_pointer data) = {
     char_to_string_function,
     uchar_to_string_function,
     short_to_string_function,
@@ -72,19 +79,23 @@ char * (*_to_string_functions[_TYPE_COUNT])(const generic_flat_pointer data) = {
     tuple_to_string_function,
 };
 
-char * string_to_string_function(const generic_flat_pointer data){
+static char * string_to_string_function(const generic_flat_pointer data){
     return get_clone_function(STRING)(data);
 }
 
-char * set_to_string_function(const generic_flat_pointer data){
+static char * set_to_string_function(const generic_flat_pointer data){
     const FlatSet set = (const FlatSet) data;
     return flat_set_to_string(set);
 }
 
-char * tuple_to_string_function(const generic_flat_pointer data){
+static char * tuple_to_string_function(const generic_flat_pointer data){
     const FlatTuple tuple = (const FlatTuple) data;
     return flat_tuple_to_string(tuple);
 }
+
+//==================================================================//
+//              Public functions                                    //
+//==================================================================//
 
 ToStringFunction get_to_string_function(FlatType type){
     return _to_string_functions[type];

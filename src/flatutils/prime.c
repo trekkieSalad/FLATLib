@@ -23,8 +23,6 @@
  *  Author: Daniel José García Paz <daniel.garcia.paz@udc.es>
  */
 
-#include <prime.h>
-
 /**
  * SECTION: prime_functions
  * @title: Prime functions
@@ -57,8 +55,14 @@
  * occurrences.
  */
 
+#include <prime.h>
+
+//==================================================================//
+//              Private functions                                   //
+//==================================================================//
+
 // Función para calcular (a^b) % m
-long long module(long long a, long long b, long long m) {
+static long long module(long long a, long long b, long long m) {
     long long result = 1;
     a = a % m;
     while (b > 0) {
@@ -71,7 +75,7 @@ long long module(long long a, long long b, long long m) {
 
 
 //Función que realiza el test de Miller-Rabin
-int miller_rabin_test(long long n, long long d) {
+static int miller_rabin_test(long long n, long long d) {
     // Seleccionar un número aleatorio 'a' en el rango [2, n-2]
     long long a = 2 + rand() % (n - 4);
 
@@ -84,10 +88,8 @@ int miller_rabin_test(long long n, long long d) {
         x = (x * x) % n;
         d *= 2;
 
-        if (x == 1)
-            return 0;
-        if (x == n - 1)
-            return 1;
+        if (x == 1) return 0;
+        if (x == n - 1) return 1;
     }
 
     return 0;
@@ -95,7 +97,7 @@ int miller_rabin_test(long long n, long long d) {
 
 
 //Función principal para comprobar si un número es probablemente primo usando el Test de Miller-Rabin
-int is_probable_prime(long long n, int k) {
+static int is_probable_prime(long long n, int k) {
     if (n == 1 || n == 4) return 0;
     if (n == 3) return 1;
 
@@ -105,16 +107,17 @@ int is_probable_prime(long long n, int k) {
 
     // Realizar k iteraciones del test de Miller-Rabin
     for (int i = 0; i < k; i++)
-        if (!miller_rabin_test(n, d))
-            return 0;
+        if (!miller_rabin_test(n, d)) return 0;
 
     return 1;
 }
 
+//==================================================================//
+//              Public functions                                    //
+//==================================================================//
 
 long long next_prime_size(long long actual) {
     long long prime = actual * 2;
-    while (!is_probable_prime(prime, 30))
-        prime++;
+    while (!is_probable_prime(prime, 30)) prime++;
     return prime;
 }

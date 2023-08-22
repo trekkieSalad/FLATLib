@@ -37,6 +37,6 @@
  * 
  * @param x Flat pointer to be freed.
  */
-void flat_free(flat_pointer x);
+void    flat_free       (FlatPointer    x);
 
 #endif

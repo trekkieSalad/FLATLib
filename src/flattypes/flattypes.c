@@ -1,5 +1,9 @@
 #include <flattypes_priv.h>
 
+//==================================================================//
+//              Public functions                                    //
+//==================================================================//
+
 char *flat_type_to_string(FlatType type) {
     char *typeStrings[] = {
         "char",         "unsigned char",        "short",        "unsigned short", 
@@ -9,8 +13,7 @@ char *flat_type_to_string(FlatType type) {
         "Unknown Type"
     };
 
-    if (type >= 0 && type < _TYPE_COUNT) {
-        return typeStrings[type];
-    }
+    if (type >= 0 && type < _TYPE_COUNT) return typeStrings[type];
+        
     return typeStrings[_TYPE_COUNT]; // Unknown Type
 }

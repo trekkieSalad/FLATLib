@@ -31,6 +31,15 @@
 #define DEFAULT_LOAD_FACTOR 0.75
 #define DEFAULT_SIZE 11
 
+//==================================================================//
+//              Opaque data structure definition                    //
+//==================================================================//
+
+/**
+ * @struct _Node
+ * 
+ * @brief A node is a container for the data of the set.
+ */
 struct _Node {
     generic_flat_pointer data;
     struct _Node *next;
@@ -38,6 +47,12 @@ struct _Node {
 
 typedef struct _Node Node;
 
+/**
+ * @struct _FlatSet
+ * 
+ * @brief A set is a collection of elements without order and without repeated 
+ * elements. It is used to store values of a single type.
+ */
 struct _FlatSet {
     Node **buckets;
     size_t size;
@@ -48,6 +63,10 @@ struct _FlatSet {
     CloneFunction cloneFunction;
     FreeFunction freeFunction;
 };
+
+//==================================================================//
+//              Private functions                                   //
+//==================================================================//
 
 /**
  * @brief Creates a new node with the given data.
@@ -105,7 +124,53 @@ static void destroy_bucket(FlatSet set, Node *bucket) {
     free(bucket);
 }
 
-// Initialization, modification and destruction operations
+/**
+ * @brief This function adds to the newSet all the subsets of the originalSet 
+ * that contain the "subset"
+ * @param originalSet set from which the subsets are taken
+ * @param newSet set to which the subsets are added (power set)
+ * @param subset root subset
+ */
+static void new_inset(const FlatSet originalSet, FlatSet newSet, FlatSet subset){
+    for (size_t i = 0; i < originalSet->size; i++) {
+        Node *current = originalSet->buckets[i];
+        while (current != NULL) {
+            // if the current element is already in the subset, skip it
+            // due to the fact that its supersets are already in the subset
+            if (flat_set_contains(subset, current->data)){
+                current = current->next;
+                continue;
+            }
+            // create a new subset that is the same as the subset and add to it
+            // the current element
+            FlatSet newSubset = newSet->cloneFunction(subset);
+            flat_set_add_element(newSubset, current->data);
+            // if the new subset is already in the new set, destroy it and
+            // continue, due to the fact that its supersets are already in the
+            // new set too
+            if (flat_set_contains(newSet, newSubset)) {
+                flat_set_destroy(newSubset);
+                current = current->next;
+                continue;
+            }
+            // add the new subset to the new set
+            flat_set_add_element(newSet, newSubset);
+            // recursively call the function to add to the new set all the
+            // supersets of the new subset
+            new_inset(originalSet, newSet, newSubset);
+            flat_set_destroy(newSubset);
+            current = current->next;
+        }
+    }
+}
+
+//==================================================================//
+//              Public functions                                    //
+//==================================================================//
+
+//      Initialization functions
+//      ------------------------
+
 FlatSet flat_set_create(FlatType type) {
 
     // allocate memory for the set and initialize it
@@ -121,22 +186,8 @@ FlatSet flat_set_create(FlatType type) {
     return newSet;
 }
 
-FlatSet flat_set_clone(const FlatSet set){
-    if (set == NULL) return NULL;
-    FlatSet copy = flat_set_create(set->type);
-
-    for (size_t i = 0; i < set->size; i++) {
-        Node *current = set->buckets[i];
-        while (current != NULL) {
-            generic_flat_pointer dataClone = set->cloneFunction(current->data);
-            flat_set_add_element(copy, dataClone);
-            free(dataClone);
-            current = current->next;
-        }
-    }
-
-    return copy;
-}
+//      Destruction functions
+//      ---------------------
 
 void flat_set_destroy(FlatSet set) {
     if (set == NULL) return;
@@ -150,6 +201,9 @@ void flat_set_destroy(FlatSet set) {
     free(set->buckets);
     free(set);
 }
+
+//      Modification functions
+//      ----------------------
 
 bool flat_set_add_element(FlatSet set, generic_flat_pointer data) {
     // if the load factor is greater than the default, rehash the set
@@ -208,7 +262,9 @@ bool flat_set_remove_element(FlatSet set, generic_flat_pointer data) {
     return false;
 }
 
-// Query operations
+//      Query functions
+//      ---------------
+
 size_t flat_set_cardinality(const FlatSet set) {
     size_t elementCounter = 0;
 
@@ -224,6 +280,46 @@ size_t flat_set_cardinality(const FlatSet set) {
     return elementCounter;
 }
 
+size_t flat_set_type_size() {
+    return sizeof(struct _FlatSet);
+}
+
+//      Evaluation functions
+//      --------------------
+
+bool flat_set_contains(const FlatSet set, const generic_flat_pointer data) {
+    // calculate the index of the data
+    unsigned int index = set->hashFunction(data) % set->size;
+    // search for the data in the bucket
+    for (Node *current = set->buckets[index]; current != NULL; current = current->next) {
+        if (set->equalsFunction(current->data, data)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool flat_set_is_subset_of(const FlatSet subset, const FlatSet set){
+    // if the sets are not of the same type or the subset has more elements 
+    // than the set, "subset" is not a subset of the set
+    if (subset->type != set->type) return false;
+    if (flat_set_cardinality(subset) > flat_set_cardinality(set)) return false;
+
+    Node *current = NULL;
+    // for each element in the subset, check if it is in the set
+    for (size_t i = 0; i < subset->size; i++) {
+        current = subset->buckets[i];
+        while (current != NULL) {
+            if (!flat_set_contains(set, current->data)) return false;
+            current = current->next;
+        }
+    }
+    return true;
+}
+
+//      FLAT ADT functions
+//      ------------------
+
 int flat_set_hashcode(const FlatSet set) {
     long hash = 0;
 
@@ -236,10 +332,6 @@ int flat_set_hashcode(const FlatSet set) {
         }
     }
     return hash;
-}
-
-size_t flat_set_type_size() {
-    return sizeof(struct _FlatSet);
 }
 
 char *flat_set_to_string(const FlatSet set) {
@@ -290,19 +382,6 @@ char *flat_set_to_string(const FlatSet set) {
     return string;
 }
 
-// evaluation operations
-bool flat_set_contains(const FlatSet set, const generic_flat_pointer data) {
-    // calculate the index of the data
-    unsigned int index = set->hashFunction(data) % set->size;
-    // search for the data in the bucket
-    for (Node *current = set->buckets[index]; current != NULL; current = current->next) {
-        if (set->equalsFunction(current->data, data)) {
-            return true;
-        }
-    }
-    return false;
-}
-
 bool flat_set_equals(const FlatSet setA, const FlatSet setB){
     // if the sets are not of the same type or have different sizes, 
     // they are not equal
@@ -320,25 +399,26 @@ bool flat_set_equals(const FlatSet setA, const FlatSet setB){
     return true;
 }
 
-bool flat_set_is_subset_of(const FlatSet subset, const FlatSet set){
-    // if the sets are not of the same type or the subset has more elements 
-    // than the set, "subset" is not a subset of the set
-    if (subset->type != set->type) return false;
-    if (flat_set_cardinality(subset) > flat_set_cardinality(set)) return false;
+FlatSet flat_set_clone(const FlatSet set){
+    if (set == NULL) return NULL;
+    FlatSet copy = flat_set_create(set->type);
 
-    Node *current = NULL;
-    // for each element in the subset, check if it is in the set
-    for (size_t i = 0; i < subset->size; i++) {
-        current = subset->buckets[i];
+    for (size_t i = 0; i < set->size; i++) {
+        Node *current = set->buckets[i];
         while (current != NULL) {
-            if (!flat_set_contains(set, current->data)) return false;
+            generic_flat_pointer dataClone = set->cloneFunction(current->data);
+            flat_set_add_element(copy, dataClone);
+            free(dataClone);
             current = current->next;
         }
     }
-    return true;
+
+    return copy;
 }
 
-// set operations
+//      FLATSET functions
+//      -----------------
+
 FlatSet flat_set_union(const FlatSet setA, const FlatSet setB) {
     // if any of the sets is NULL or they are not of the same type, return NULL
     if (setA == NULL || setB == NULL) return NULL;
@@ -439,46 +519,6 @@ FlatSet flat_set_symmetric_difference(const FlatSet setA, const FlatSet setB){
         }
     }
     return newSet;
-}
-
-/**
- * @brief This function adds to the newSet all the subsets of the originalSet 
- * that contain the "subset"
- * @param originalSet set from which the subsets are taken
- * @param newSet set to which the subsets are added (power set)
- * @param subset root subset
- */
-void new_inset(const FlatSet originalSet, FlatSet newSet, FlatSet subset){
-    for (size_t i = 0; i < originalSet->size; i++) {
-        Node *current = originalSet->buckets[i];
-        while (current != NULL) {
-            // if the current element is already in the subset, skip it
-            // due to the fact that its supersets are already in the subset
-            if (flat_set_contains(subset, current->data)){
-                current = current->next;
-                continue;
-            }
-            // create a new subset that is the same as the subset and add to it
-            // the current element
-            FlatSet newSubset = newSet->cloneFunction(subset);
-            flat_set_add_element(newSubset, current->data);
-            // if the new subset is already in the new set, destroy it and
-            // continue, due to the fact that its supersets are already in the
-            // new set too
-            if (flat_set_contains(newSet, newSubset)) {
-                flat_set_destroy(newSubset);
-                current = current->next;
-                continue;
-            }
-            // add the new subset to the new set
-            flat_set_add_element(newSet, newSubset);
-            // recursively call the function to add to the new set all the
-            // supersets of the new subset
-            new_inset(originalSet, newSet, newSubset);
-            flat_set_destroy(newSubset);
-            current = current->next;
-        }
-    }
 }
 
 FlatSet flat_set_power(const FlatSet set){

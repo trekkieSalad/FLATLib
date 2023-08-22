@@ -27,9 +27,12 @@
 #include <flatset.h>
 #include <flattuple.h>
 
+//==================================================================//
+//              MACRO definitions                                   //
+//==================================================================//
 
 #define DEFINE_CLONE_FUNCTION(TYPE, SUFFIX) \
-    generic_flat_pointer  SUFFIX##_clone_function(const generic_flat_pointer data) { \
+    static generic_flat_pointer  SUFFIX##_clone_function(const generic_flat_pointer data) { \
         if (!data) \
             return NULL; \
         TYPE *value = (TYPE *)data; \
@@ -37,6 +40,10 @@
         *clone = *value; \
         return clone; \
     }
+
+//==================================================================//
+//              Private functions                                   //
+//==================================================================//
 
 DEFINE_CLONE_FUNCTION(char, char)
 DEFINE_CLONE_FUNCTION(unsigned char, uchar)
@@ -50,14 +57,13 @@ DEFINE_CLONE_FUNCTION(long long, longlong)
 DEFINE_CLONE_FUNCTION(unsigned long long, ulonglong)
 DEFINE_CLONE_FUNCTION(float, float)
 DEFINE_CLONE_FUNCTION(double, double)
-DEFINE_CLONE_FUNCTION(long double, longdouble)
 
 
-generic_flat_pointer  string_clone_function(const generic_flat_pointer data);
-generic_flat_pointer  set_clone_function(const generic_flat_pointer data);
-generic_flat_pointer  tuple_clone_function(const generic_flat_pointer data);
+static generic_flat_pointer  string_clone_function(const generic_flat_pointer data);
+static generic_flat_pointer  set_clone_function(const generic_flat_pointer data);
+static generic_flat_pointer  tuple_clone_function(const generic_flat_pointer data);
 
-generic_flat_pointer  (*_clone_functions[_TYPE_COUNT])(const generic_flat_pointer data) = {
+static generic_flat_pointer  (*_clone_functions[_TYPE_COUNT])(const generic_flat_pointer data) = {
     char_clone_function,
     uchar_clone_function,
     short_clone_function,
@@ -75,7 +81,7 @@ generic_flat_pointer  (*_clone_functions[_TYPE_COUNT])(const generic_flat_pointe
     tuple_clone_function
 };
 
-generic_flat_pointer string_clone_function(const generic_flat_pointer data) {
+static generic_flat_pointer string_clone_function(const generic_flat_pointer data) {
     if (!data)
         return NULL;
 
@@ -89,7 +95,7 @@ generic_flat_pointer string_clone_function(const generic_flat_pointer data) {
     return copy;
 }
 
-generic_flat_pointer  set_clone_function(const generic_flat_pointer data){
+static generic_flat_pointer  set_clone_function(const generic_flat_pointer data){
     if (!data)
         return NULL;
     const FlatSet set = (const FlatSet) data;
@@ -97,13 +103,17 @@ generic_flat_pointer  set_clone_function(const generic_flat_pointer data){
     return copy;
 }
 
-generic_flat_pointer  tuple_clone_function(const generic_flat_pointer data){
+static generic_flat_pointer  tuple_clone_function(const generic_flat_pointer data){
     if (!data)
         return NULL;
     const FlatTuple tuple = (const FlatTuple) data;
     FlatTuple copy = flat_tuple_clone(tuple);
     return copy;
 }
+
+//==================================================================//
+//              Public functions                                    //
+//==================================================================//
 
 CloneFunction get_clone_function(FlatType type){
     return _clone_functions[type];

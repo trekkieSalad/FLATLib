@@ -31,6 +31,10 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+//==================================================================//
+//              Type definitions                                    //
+//==================================================================//
+
 typedef unsigned int            (*HashFunction)     (const generic_flat_pointer data);
 typedef bool                    (*EqualsFunction)   (const generic_flat_pointer setA, 
                                                      const generic_flat_pointer setB);
@@ -38,6 +42,9 @@ typedef char *                  (*ToStringFunction) (const generic_flat_pointer 
 typedef generic_flat_pointer    (*CloneFunction)    (const generic_flat_pointer data);
 typedef void                    (*FreeFunction)     (generic_flat_pointer       data);
 
+//==================================================================//
+//              Public functions                                    //
+//==================================================================//
 
 HashFunction        get_hash_function       (FlatType);
 EqualsFunction      get_equals_function     (FlatType);

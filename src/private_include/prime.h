@@ -29,6 +29,10 @@
 #include <stdlib.h>
 #include <math.h>
 
+//==================================================================//
+//              Public functions                                    //
+//==================================================================//
+
 /**
  * @brief Get the next prime number after the double given.
  * 

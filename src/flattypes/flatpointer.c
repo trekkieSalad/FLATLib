@@ -25,35 +25,65 @@
 #define __STDC_WANT_LIB_EXT2__ 1
 #include <flatpointer.h>
 #include <flattypes_priv.h>
+#include <flatcode.h>
 #include <flatset.h>
+#include <flattuple.h>
 #include <color.h>
-#include <stdio.h>
 
+//==================================================================//
+//              ADT definitions                                     //
+//==================================================================//
 
-struct _flat_pointer {
+/**
+ * _FlatPointer:
+ * 
+ * A flat pointer is a data structure that contains a typed value. It is used
+ * to store values of different types and let the user retrieve them as the
+ * original type. It is used by the FLATlib data structures.
+ */
+
+struct _FlatPointer {
     FlatType type;
     generic_flat_pointer value;
 };
 
-#define DEFINE_MAKE_FUNCTION(TYPE, CTYPE) \
-    flat_pointer TYPE##_FLAT_POINTER(CTYPE x) { \
-        flat_pointer fp = malloc(sizeof(struct _flat_pointer)); \
-        fp->type = TYPE; \
-        fp->value = malloc(sizeof(CTYPE)); \
-        *(CTYPE *)fp->value = x; \
-        return fp; \
+//==================================================================//
+//              MACRO definitions                                   //
+//==================================================================//
+
+/*
+ * These macros are used to define the make and get functions for each type.
+ */
+
+#define DEFINE_MAKE_FUNCTION(TYPE, CTYPE)                                   \
+    FlatPointer TYPE##_FLAT_POINTER(CTYPE x) {                              \
+        FlatPointer fp = malloc(sizeof(struct _FlatPointer));               \
+        fp->type = TYPE;                                                    \
+        fp->value = malloc(sizeof(CTYPE));                                  \
+        *(CTYPE *)fp->value = x;                                            \
+        return fp;                                                          \
     }
 
-#define DEFINE_GET_FUNCTION(TYPE, CTYPE) \
-    CTYPE FLAT_POINTER_TO_##TYPE(flat_pointer p) { \
-        if (p->type != TYPE) { \
-            fprintf(stderr, "Error: Attempted to get value of flat pointer of" \
-                    " type " RED "%s" RESET " as type" GREEN " %s" RESET "\n", \
-                    flat_type_to_string(p->type), flat_type_to_string(TYPE)); \
-            exit(1); \
-        } \
-        return *(CTYPE *)p->value; \
+#define DEFINE_GET_FUNCTION(TYPE, CTYPE)                                    \
+    CTYPE FLAT_POINTER_TO_##TYPE(FlatPointer p) {                           \
+        if (p->type != TYPE)                                                \
+            CRASH_ON_ERROR("Attempted to get value of flat pointer of"      \
+                " type " RED "%s" RESET " as type" GREEN " %s" RESET "\n",  \
+                flat_type_to_string(p->type), flat_type_to_string(TYPE));   \
+        return *(CTYPE *)p->value;                                          \
     }
+
+//==================================================================//
+//              Public functions for internal use                   //
+//==================================================================//
+
+FlatPointer __INVALID_TYPE_ERROR(){
+    CRASH_ON_ERROR("Attempted to create a flat pointer from an invalid type\n");
+    return NULL;
+}
+
+//      Flat pointer creation functions
+//      -------------------------------
 
 DEFINE_MAKE_FUNCTION(CHAR, char)
 DEFINE_MAKE_FUNCTION(UCHAR, unsigned char)
@@ -67,21 +97,30 @@ DEFINE_MAKE_FUNCTION(LONG_LONG, long long)
 DEFINE_MAKE_FUNCTION(ULONG_LONG, unsigned long long)
 DEFINE_MAKE_FUNCTION(FLOAT, float)
 DEFINE_MAKE_FUNCTION(DOUBLE, double)
-//DEFINE_MAKE_FUNCTION(STRING, char *)
 
-flat_pointer STRING_FLAT_POINTER(char *x) {
-    flat_pointer fp = malloc(sizeof(struct _flat_pointer));
+FlatPointer STRING_FLAT_POINTER(char *x) {
+    FlatPointer fp = malloc(sizeof(struct _FlatPointer));
     fp->type = STRING;
     fp->value = strdup(x);
     return fp;
 }
 
-flat_pointer SET_FLAT_POINTER(FlatSet x){
-    flat_pointer fp = (flat_pointer) malloc(sizeof(struct _flat_pointer));
+FlatPointer SET_FLAT_POINTER(FlatSet x){
+    FlatPointer fp = (FlatPointer) malloc(sizeof(struct _FlatPointer));
     fp->type = SET;
     fp->value = x;
     return fp;
 }
+
+FlatPointer TUPLE_FLAT_POINTER(FlatTuple x){
+    FlatPointer fp = (FlatPointer) malloc(sizeof(struct _FlatPointer));
+    fp->type = TUPLE;
+    fp->value = x;
+    return fp;
+}
+
+//      Flat pointer get functions
+//      --------------------------
 
 DEFINE_GET_FUNCTION(CHAR, char)
 DEFINE_GET_FUNCTION(UCHAR, unsigned char)
@@ -95,10 +134,16 @@ DEFINE_GET_FUNCTION(LONG_LONG, long long)
 DEFINE_GET_FUNCTION(ULONG_LONG, unsigned long long)
 DEFINE_GET_FUNCTION(FLOAT, float)
 DEFINE_GET_FUNCTION(DOUBLE, double)
-DEFINE_GET_FUNCTION(STRING, char *)
 
+char * FLAT_POINTER_TO_STRING(FlatPointer x){
+    if (x->type != STRING)
+        CRASH_ON_ERROR("Attempted to get value of flat pointer of"
+                " type " RED "%s" RESET " as type" GREEN " %s" RESET "\n",
+                flat_type_to_string(x->type), flat_type_to_string(STRING));
+    return (char *) x->value;
+}
 
-FlatSet FLAT_POINTER_TO_SET(flat_pointer x){
+FlatSet FLAT_POINTER_TO_SET(FlatPointer x){
     if (x->type != SET) {
         fprintf(stderr, "Error: Attempted to get value of flat pointer of"
                 " type " RED "%s" RESET " as type" GREEN " %s" RESET "\n",
@@ -108,19 +153,45 @@ FlatSet FLAT_POINTER_TO_SET(flat_pointer x){
     return (FlatSet) x->value;
 }
 
-flat_pointer flat_pointer_create(FlatType type, generic_flat_pointer value) {
+FlatTuple FLAT_POINTER_TO_TUPLE(FlatPointer x){
+    if (x->type != TUPLE) {
+        fprintf(stderr, "Error: Attempted to get value of flat pointer of"
+                " type " RED "%s" RESET " as type" GREEN " %s" RESET "\n",
+                flat_type_to_string(x->type), flat_type_to_string(TUPLE));
+        exit(1);
+    }
+    return (FlatTuple) x->value;
+}
+
+//==================================================================//
+//              Public functions                                    //
+//==================================================================//
+
+//      Initialization functions
+//      ------------------------
+
+FlatPointer flat_pointer_create(FlatType type, generic_flat_pointer value) {
     if (value == NULL) return NULL;
-    flat_pointer fp = (flat_pointer) malloc(sizeof(struct _flat_pointer));
+    FlatPointer fp = (FlatPointer) malloc(sizeof(struct _FlatPointer));
     fp->type = type;
     fp->value = value;
     return fp;
 }
+           
+//      Destruction functions
+//      ---------------------
 
-void flat_pointer_destroy(flat_pointer fp) {
+void flat_pointer_destroy(FlatPointer fp) {
     if (fp == NULL) return;
+    // Free memory depending on the type. For primitive types, just free the
+    // memory allocated for the value. For flat data structures, call the
+    // corresponding destroy function.
     switch (fp->type) {
     case SET:
         flat_set_destroy((FlatSet) fp->value);
+        break;
+    case TUPLE:
+        flat_tuple_destroy((FlatTuple) fp->value);
         break;
     
     default:
@@ -130,28 +201,31 @@ void flat_pointer_destroy(flat_pointer fp) {
     free(fp);
 }
 
-FlatType flat_pointer_get_type(flat_pointer fp) {
+FlatType flat_pointer_get_type(FlatPointer fp) {
     return fp->type;
 }
 
-char *flat_pointer_to_string(flat_pointer fp) {
+//      FLAT Type functions
+//      -------------------
+
+char *flat_pointer_to_string(FlatPointer fp) {
     if (fp == NULL) return strdup("nil ");
     return get_to_string_function(fp->type)(fp->value);
 }
 
-flat_pointer flat_pointer_clone(flat_pointer fp) {
+FlatPointer flat_pointer_clone(FlatPointer fp) {
     if (fp == NULL) return NULL;
     return flat_pointer_create(fp->type, get_clone_function(fp->type)(fp->value));
 }   
 
-bool flat_pointer_equals(flat_pointer fp1, flat_pointer fp2) {
+bool flat_pointer_equals(FlatPointer fp1, FlatPointer fp2) {
     if (fp1 == NULL && fp2 == NULL) return true;
     if (fp1 == NULL || fp2 == NULL) return false;
     if (fp1->type != fp2->type) return false;
     return get_equals_function(fp1->type)(fp1->value, fp2->value);
 }
 
-int flat_pointer_hashcode(flat_pointer fp) {
+int flat_pointer_hashcode(FlatPointer fp) {
     if (fp == NULL) return 0;
     return get_hash_function(fp->type)(fp->value);
 }

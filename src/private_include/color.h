@@ -28,7 +28,8 @@
 
 #define RESET               "\033[0m"
 
-// Styles
+//      Styles
+//      ------
 
 #define BOLD                "\033[1m"
 #define FAINT               "\033[2m"
@@ -41,7 +42,8 @@
 #define CROSS_OUT           "\033[9m"
 #define DEFAULT             "\033[10m"
 
-// Alternative styles
+//      Alternative styles
+//      ------------------
 
 #define ALT_BOLD            "\033[11m"
 #define ALT_FAINT           "\033[12m"
@@ -53,7 +55,8 @@
 #define ALT_HIDDEN          "\033[18m"
 #define ALT_CROSS_OUT       "\033[19m"
 
-// Quit alternative styles
+//      Quit alternative styles
+//      -----------------------
 
 #define FRAKTUR             "\033[20m"
 #define NO_BOLD             "\033[21m"
@@ -65,7 +68,8 @@
 #define NO_HIDDEN           "\033[28m"
 #define NO_CROSS_OUT        "\033[29m"
 
-//Colors
+//      Colors
+//      ------
 
 #define BLACK               "\033[30m"
 #define RED                 "\033[31m"
@@ -78,7 +82,8 @@
 #define DEFAULT_COLOR       "\033[39m"
 #define COLOR(r, g, b)      "\033[38;2;" #r ";" #g ";" #b "m"
 
-// Bright colors
+//      Bright colors
+//      -------------
 
 #define BR_BLACK            "\033[90m"
 #define BR_RED              "\033[91m"
@@ -89,7 +94,8 @@
 #define BR_CYAN             "\033[96m"
 #define BR_WHITE            "\033[97m"
 
-// Background colors
+//      Background colors
+//      -----------------
 
 #define BG_BLACK            "\033[40m"
 #define BG_RED              "\033[41m"
@@ -102,7 +108,8 @@
 #define BG_DEFAULT          "\033[49m"
 #define BG_COLOR(r, g, b)   "\033[48;2;" #r ";" #g ";" #b "m"
 
-// Bright background colors
+//      Bright background colors
+//      -------------------------
 
 #define BG_BR_BLACK         "\033[100m"
 #define BG_BR_RED           "\033[101m"
