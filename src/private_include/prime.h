@@ -25,8 +25,6 @@
 
 #ifndef PRIME_H
 #define PRIME_H
-
-#include <stdlib.h>
 #include <math.h>
 
 //==================================================================//

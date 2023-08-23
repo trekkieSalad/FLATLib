@@ -34,6 +34,36 @@
 #define SET_TYPES_H
 
 #include <stdbool.h>
+#include <stddef.h>
+
+/**
+ * @typedef FlatSet
+ * 
+ * @brief A set is a collection of elements without order and without repeated 
+ * elements. It is used to store values of a single type.
+ */
+typedef struct _FlatSet * FlatSet;
+
+/**
+ * @typedef generic_flat_pointer
+ * 
+ * @brief A flat pointer is a pointer to a typed value.
+ * 
+ * A flat pointer is a pointer to a typed value. It is used to store values of
+ * different types and let the user retrieve them as the original type. It is 
+ * used by the FLATlib data structures. * 
+ */
+typedef struct _FlatPointer    *FlatPointer;
+
+/**
+ * @typedef FlatTuple
+ * 
+ * @brief   A FlatTuple is a pointer to a tuple of FlatPointers. A tuple is a 
+ * finite ordered and inmutable list of elements. The elements of a tuple can 
+ * be of any primitive type, string or FlatLib data structure and are 
+ * represented by FlatPointers.
+ */
+typedef struct _FlatTuple * FlatTuple;
 
 /**
  * @typedef FlatType

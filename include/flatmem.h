@@ -26,7 +26,6 @@
 #ifndef FLAT_MEM_H
 #define FLAT_MEM_H
 
-#include <stdlib.h>
 #include <flatpointer.h>
 
 /**

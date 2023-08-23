@@ -23,6 +23,8 @@
  *  Author: Daniel José García Paz <daniel.garcia.paz@udc.es>
  */
 
+#include <stdlib.h>
+
 #include <flatmem.h>
 
 void flat_free(FlatPointer p) {

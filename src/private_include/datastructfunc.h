@@ -28,8 +28,8 @@
 #define DATA_STRUCT_FUNC_H
 
 #include <flattypes.h>
-#include <stdbool.h>
-#include <stddef.h>
+#include <flatset.h>
+#include <flattuple.h>
 
 //==================================================================//
 //              Type definitions                                    //

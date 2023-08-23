@@ -22,13 +22,17 @@
  * 
  *  Author: Daniel José García Paz <daniel.garcia.paz@udc.es>
  */
+
 #define __STDC_WANT_LIB_EXT2__ 1
+
+#include <stdlib.h>
+#include <string.h>
+
 #include <flatpointer.h>
+
 #include <flattypes_priv.h>
+#include <datastructfunc.h>
 #include <flatcode.h>
-#include <flatset.h>
-#include <flattuple.h>
-#include <color.h>
 
 //==================================================================//
 //              ADT definitions                                     //

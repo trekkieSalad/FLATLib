@@ -2,6 +2,7 @@
 #define FLATCODE_H
 
 #include <color.h>
+#include <stdio.h>
 
 //==================================================================//
 //              Type definitions                                    //

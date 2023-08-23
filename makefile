@@ -22,7 +22,7 @@ SRC_DIRS 		= $(UTILS_DIR) $(FLAT_TYPES_DIR) $(FLAT_MEM_DIR) $(STRUCTS_DIR)
 # Test directories
 SET_DIR    		= flatset
 TUPLE_DIR 		= flattuple
-TEST_DIRS 		= $(SET_DIR) $(FLAT_TYPES_DIR) $(UTILS_DIR) $(FLAT_MEM_DIR) $(TUPLE_DIR)
+TEST_DIRS 		= $(SET_DIR) $(FLAT_TYPES_DIR) $(UTILS_DIR) $(TUPLE_DIR)
 
 # ==================================  FILES  ==================================
 

@@ -23,12 +23,13 @@
  *  Author: Daniel José García Paz <daniel.garcia.paz@udc.es>
  */
 
+#include <flatset.h>
+
+#include <datastructfunc.h>
+
 //==================================================================//
 //              MACRO definitions                                   //
 //==================================================================//
-
-#include <datastructfunc.h>
-#include <flatset.h>
 
 #define DEFINE_HASH_FUNCTION(TYPE, SUFFIX) \
     size_t SUFFIX##_size() { \

@@ -26,18 +26,7 @@
 #ifndef HASH_SET_H
 #define HASH_SET_H
 
-#include <datastructfunc.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
-
-/**
- * @typedef FlatSet
- * 
- * @brief A set is a collection of elements without order and without repeated 
- * elements. It is used to store values of a single type.
- */
-typedef struct _FlatSet * FlatSet;
+#include <flattypes.h>
 
 //==================================================================//
 //              Public functions                                    //

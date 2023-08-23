@@ -23,11 +23,16 @@
  *  Author: Daniel José García Paz <daniel.garcia.paz@udc.es>
  */
 
-#include <flatpointer.h>
-#include <flatcode.h>
-#include <flattypes_priv.h>
-#include <flattuple.h>
 #include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include <flatpointer.h>
+#include <flattuple.h>
+
+#include <flatcode.h>
+#include <datastructfunc.h>
+#include <flattypes_priv.h>
 
 //==================================================================//
 //              Opaque data structure definition                    //

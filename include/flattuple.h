@@ -25,19 +25,10 @@
 #ifndef FLATTUPLE_H
 #define FLATTUPLE_H
 
-#include <flatpointer.h>
+#include <flattypes.h>
 
 #define END_OF_TUPLE 0
 
-/**
- * @typedef FlatTuple
- * 
- * @brief   A FlatTuple is a pointer to a tuple of FlatPointers. A tuple is a 
- * finite ordered and inmutable list of elements. The elements of a tuple can 
- * be of any primitive type, string or FlatLib data structure and are 
- * represented by FlatPointers.
- */
-typedef struct _FlatTuple * FlatTuple;
 
 /**
  * @brief Creates a new FlatTuple from an indefinite number of FlatPointers.

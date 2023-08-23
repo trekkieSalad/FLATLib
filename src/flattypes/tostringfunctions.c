@@ -22,10 +22,11 @@
  * 
  *  Author: Daniel José García Paz <daniel.garcia.paz@udc.es>
  */
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
 
 #include <datastructfunc.h>
-#include <flatset.h>
-#include <flattuple.h>
 
 //==================================================================//
 //              MACRO definitions                                   //

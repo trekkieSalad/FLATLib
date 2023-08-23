@@ -26,20 +26,7 @@
 #ifndef FLAT_POINTER_H
 #define FLAT_POINTER_H
 
-#include <flatset.h>
-#include <flattuple.h>
-#include <flatcode.h>
-
-/**
- * @typedef generic_flat_pointer
- * 
- * @brief A flat pointer is a pointer to a typed value.
- * 
- * A flat pointer is a pointer to a typed value. It is used to store values of
- * different types and let the user retrieve them as the original type. It is 
- * used by the FLATlib data structures. * 
- */
-typedef struct _FlatPointer    *FlatPointer;
+#include <flattypes.h>
 
 /**
  * @brief Creates a flat pointer from a primitive type or a string.
