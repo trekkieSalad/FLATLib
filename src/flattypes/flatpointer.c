@@ -112,14 +112,14 @@ FlatPointer STRING_FLAT_POINTER(char *x) {
 FlatPointer SET_FLAT_POINTER(FlatSet x){
     FlatPointer fp = (FlatPointer) malloc(sizeof(struct _FlatPointer));
     fp->type = SET;
-    fp->value = x;
+    fp->value = get_clone_function(SET)(x);
     return fp;
 }
 
 FlatPointer TUPLE_FLAT_POINTER(FlatTuple x){
     FlatPointer fp = (FlatPointer) malloc(sizeof(struct _FlatPointer));
     fp->type = TUPLE;
-    fp->value = x;
+    fp->value = get_clone_function(TUPLE)(x);
     return fp;
 }
 
@@ -207,6 +207,10 @@ void flat_pointer_destroy(FlatPointer fp) {
 
 FlatType flat_pointer_get_type(FlatPointer fp) {
     return fp->type;
+}
+
+generic_flat_pointer flat_pointer_get_value(FlatPointer fp) {
+    return fp->value;
 }
 
 //      FLAT Type functions
